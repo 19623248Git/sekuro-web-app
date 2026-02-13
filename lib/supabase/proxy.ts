@@ -64,6 +64,13 @@ export async function updateSession(request: NextRequest) {
       url.pathname = "/admin/home";
       return NextResponse.redirect(url);
     }
+    
+    // Redirect /admin to /admin/home
+    if (request.nextUrl.pathname === "/admin" || request.nextUrl.pathname === "/admin/") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin/home";
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
