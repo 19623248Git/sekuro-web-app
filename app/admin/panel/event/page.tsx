@@ -30,7 +30,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, Filter } from 'lucide-react';
 
 type Event = {
   id: number;
@@ -64,6 +64,7 @@ export default function EventManagementPanel() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const itemsPerPage = 5;
 
   // Fetch all events
@@ -229,10 +230,17 @@ export default function EventManagementPanel() {
     ? events 
     : events.filter(event => event.event_status === statusFilter);
   
-  const totalPages = Math.ceil(filteredEvents.length / itemsPerPage);
+  // Sort by created_at date
+  const sortedEvents = [...filteredEvents].sort((a, b) => {
+    const dateA = new Date(a.created_at).getTime();
+    const dateB = new Date(b.created_at).getTime();
+    return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+  });
+  
+  const totalPages = Math.ceil(sortedEvents.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedEvents = filteredEvents.slice(startIndex, endIndex);
+  const paginatedEvents = sortedEvents.slice(startIndex, endIndex);
 
   // Reset to page 1 when filter changes
   useEffect(() => {
@@ -338,6 +346,15 @@ export default function EventManagementPanel() {
             </option>
           ))}
         </select>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setSortOrder(prev => prev === 'newest' ? 'oldest' : 'newest')}
+          className="flex items-center gap-2"
+        >
+          <Filter className="h-4 w-4" />
+          {sortOrder === 'newest' ? 'Newest First' : 'Oldest First'}
+        </Button>
       </div>
 
       {/* Events Table */}
@@ -410,8 +427,20 @@ export default function EventManagementPanel() {
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex items-center justify-between px-4 py-4 border-t">
-                <div className="text-sm text-muted-foreground">
-                  Page {currentPage} of {totalPages}
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>Page</span>
+                  <select
+                    value={currentPage}
+                    onChange={(e) => setCurrentPage(Number(e.target.value))}
+                    className="flex h-8 rounded-md border border-input bg-transparent px-2 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  >
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <option key={page} value={page}>
+                        {page}
+                      </option>
+                    ))}
+                  </select>
+                  <span>of {totalPages}</span>
                 </div>
                 <div className="flex gap-2">
                   <Button
