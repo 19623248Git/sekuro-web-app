@@ -338,9 +338,6 @@ export default function EventManagementPanel() {
             </option>
           ))}
         </select>
-        <span className="text-sm text-muted-foreground">
-          Showing {paginatedEvents.length} of {filteredEvents.length} events
-        </span>
       </div>
 
       {/* Events Table */}

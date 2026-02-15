@@ -5,6 +5,7 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
+import { Home } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -16,7 +17,13 @@ export default function AdminLayout({
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
         <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
           <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-              <ThemeSwitcher />
+              <div className="flex items-center gap-4">
+                <Link href="/admin/home" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                  <Home size="20" />
+                  <span className="font-medium">Home</span>
+                </Link>
+                <ThemeSwitcher />
+              </div>
               <Suspense>
                 <AdminAuthButton />
               </Suspense>
