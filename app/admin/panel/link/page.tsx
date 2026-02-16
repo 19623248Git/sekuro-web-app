@@ -38,6 +38,7 @@ type Link = {
   title: string;
   link: string;
   group_type: 'SOCIAL' | 'MATERIAL' | 'TEST' | 'FORM' | 'MISC' | 'DEV';
+  valid: 'OPEN' | 'CLOSE';
 };
 
 const LINK_GROUP_OPTIONS = ['SOCIAL', 'MATERIAL', 'TEST', 'FORM', 'MISC', 'DEV'] as const;
@@ -46,6 +47,7 @@ type LinkFormData = {
   title: string;
   link: string;
   group_type: 'SOCIAL' | 'MATERIAL' | 'TEST' | 'FORM' | 'MISC' | 'DEV';
+  valid: 'OPEN' | 'CLOSE';
 };
 
 export default function LinkManagementPanel() {
@@ -54,7 +56,8 @@ export default function LinkManagementPanel() {
   const [formData, setFormData] = useState<LinkFormData>({
     title: '',
     link: '',
-    group_type: 'DEV'
+    group_type: 'DEV',
+    valid: 'OPEN'
   });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -116,7 +119,8 @@ export default function LinkManagementPanel() {
         setFormData({
           title: '',
           link: '',
-          group_type: 'DEV'
+          group_type: 'DEV',
+          valid: 'OPEN'
         });
         setDialogOpen(false);
         fetchLinks();
@@ -157,7 +161,8 @@ export default function LinkManagementPanel() {
         setFormData({
           title: '',
           link: '',
-          group_type: 'DEV'
+          group_type: 'DEV',
+          valid: 'OPEN'
         });
         setEditingId(null);
         setDialogOpen(false);
@@ -202,7 +207,8 @@ export default function LinkManagementPanel() {
     setFormData({
       title: link.title,
       link: link.link,
-      group_type: link.group_type
+      group_type: link.group_type,
+      valid: link.valid
     });
     setDialogOpen(true);
   };
@@ -213,7 +219,8 @@ export default function LinkManagementPanel() {
     setFormData({
       title: '',
       link: '',
-      group_type: 'DEV'
+      group_type: 'DEV',
+      valid: 'OPEN'
     });
     setDialogOpen(true);
   };
@@ -299,6 +306,21 @@ export default function LinkManagementPanel() {
                 </select>
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="valid">Status</Label>
+                <select
+                  id="valid"
+                  name="valid"
+                  value={formData.valid}
+                  onChange={handleInputChange}
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  required
+                >
+                  <option value="OPEN">OPEN</option>
+                  <option value="CLOSE">CLOSE</option>
+                </select>
+              </div>
+
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                   Cancel
@@ -355,6 +377,7 @@ export default function LinkManagementPanel() {
                   <TableHead className="text-center"><strong>Title</strong></TableHead>
                   <TableHead className="text-center"><strong>Link</strong></TableHead>
                   <TableHead className="text-center"><strong>Group Type</strong></TableHead>
+                  <TableHead className="text-center"><strong>Status</strong></TableHead>
                   <TableHead className="text-center"><strong>Actions</strong></TableHead>
                 </TableRow>
               </TableHeader>
@@ -374,6 +397,11 @@ export default function LinkManagementPanel() {
                     </TableCell>
                     <TableCell className="text-center">
                       <Badge variant="outline">{link.group_type}</Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant={link.valid === 'OPEN' ? 'default' : 'secondary'}>
+                        {link.valid}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-center">
                       <DropdownMenu>
