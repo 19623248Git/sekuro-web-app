@@ -38,7 +38,9 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
+      // Refresh the router to update the session
+      router.refresh();
+      // Redirect to admin home page
       router.push("/admin/home");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
