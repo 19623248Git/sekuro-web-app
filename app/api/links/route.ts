@@ -19,7 +19,8 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from('sekuro_links')
-      .select('*');
+      .select('*')
+      .neq('group_type', 'DEV');
 
     if (error) {
       return NextResponse.json(
