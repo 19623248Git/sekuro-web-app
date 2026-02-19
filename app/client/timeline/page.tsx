@@ -98,6 +98,7 @@ export default function TimelinePage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [showAll, setShowAll] = useState(false);
+	const [ongoingEvents, setOngoingEvents] = useState<Event[]>([]);
 
 	useEffect(() => {
 		async function fetchEvents() {
@@ -124,7 +125,20 @@ export default function TimelinePage() {
 			}
 		}
 
+		async function fetchOngoingEvent() {
+			try {
+				const res = await fetch("/api/ongoingEvents");
+				const json = await res.json();
+				if (res.ok && json.data) {
+					setOngoingEvents(json.data);
+				}
+			} catch (err) {
+				console.error("Failed to fetch ongoing event:", err);
+			}
+		}
+
 		fetchEvents();
+		fetchOngoingEvent();
 	}, []);
 
 	   // State for nextMilestone and countdown, so all time logic runs only on client
@@ -200,6 +214,39 @@ export default function TimelinePage() {
 						</div>
 					</div>
 				</div>
+
+				{/* Ongoing Events Cards */}
+				{ongoingEvents.length > 0 && (
+					<div className="mt-8 flex flex-col gap-6">
+						{ongoingEvents.map((event) => (
+							<div key={event.id} className="bg-green-500/10 border border-green-500/30 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden">
+								<div className="absolute left-0 top-0 w-2 h-full bg-green-400" />
+								<div className="flex-1">
+									<div className="flex items-center gap-2 mb-2 text-green-400">
+										<span className="relative flex h-3 w-3">
+											<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+											<span className="relative inline-flex rounded-full h-3 w-3 bg-green-400" />
+										</span>
+										<span className="text-xs font-black uppercase tracking-[0.2em]">Ongoing Now</span>
+									</div>
+									<h4 className="text-2xl font-bold text-white mb-2">
+										{event.event_title}
+									</h4>
+									<div className="flex items-center gap-3 text-slate-400 text-sm">
+										<span className="flex items-center gap-1.5">
+											<FaClock className="text-sm" />
+											{formatEventDate(event.event_start)}
+										</span>
+										<span className="flex items-center gap-1.5">
+											<FaMapMarkerAlt className="text-sm" />
+											{event.event_location}
+										</span>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				)}
 
 				{/* Day Selector Tabs */}
 				<div className="flex flex-col gap-6 mb-12">

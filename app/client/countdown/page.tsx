@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import { FaArrowRight, FaArrowLeft, FaDownload, FaBook, FaCogs, FaUsers, FaClock, FaRegCalendarAlt, FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { FaArrowRight, FaMapMarkerAlt, FaArrowLeft, FaDownload, FaBook, FaCogs, FaUsers, FaClock, FaRegCalendarAlt, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import ClientNavbar from "../components/navbar";
 import ClientFooter from "../components/footer";
 
@@ -33,12 +33,25 @@ function pad(value: number): string {
   return value.toString().padStart(2, "0");
 }
 
+function formatEventDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 
 export default function CountdownPage() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0, raw: 0 });
   const [eventTitle, setEventTitle] = useState<string>("");
   const [eventLocation, setEventLocation] = useState<string>("");
   const [eventDate, setEventDate] = useState<string>("");
+  const [ongoingEvents, setOngoingEvents] = useState<any[]>([]);
   const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -85,7 +98,21 @@ export default function CountdownPage() {
         }, 1000);
       }
     }
+
+    async function fetchOngoingEvent() {
+      try {
+        const res = await fetch("/api/ongoingEvents");
+        const json = await res.json();
+        if (res.ok && json.data) {
+          setOngoingEvents(json.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch ongoing event:", err);
+      }
+    }
+
     fetchEvent();
+    fetchOngoingEvent();
     return () => {
       if (intervalRef.current) window.clearInterval(intervalRef.current);
     };
@@ -144,6 +171,37 @@ export default function CountdownPage() {
             </div>
           </div>
         </div>
+        
+        {/* Ongoing Events Cards */}
+        {ongoingEvents.length > 0 && (
+          <section className="relative max-w-4xl mx-auto px-4 pb-12">
+            <div className="flex flex-col gap-6">
+              {ongoingEvents.map((event) => (
+                <div key={event.id} className="bg-green-500/10 border border-green-500/30 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden">
+                  <div className="absolute left-0 top-0 w-2 h-full bg-green-400" />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2 text-green-400">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-400" />
+                      </span>
+                      <span className="text-xs font-black uppercase tracking-[0.2em]">Ongoing Now</span>
+                    </div>
+                    <h4 className="text-2xl font-bold text-white mb-2">
+                      {event.event_title}
+                    </h4>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-slate-400 text-sm">
+                      <span className="flex items-center gap-1.5">
+                        <FaMapMarkerAlt className="text-sm" />
+                        {event.event_location}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Countdown Timer Section */}
         <section className="relative max-w-4xl mx-auto px-4 pb-24">
