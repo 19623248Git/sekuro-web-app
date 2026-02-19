@@ -17,15 +17,11 @@ export async function GET() {
       }
     );
 
-    const nowIso = new Date().toISOString();
-
     const { data, error } = await supabase
       .from('sekuro_event')
       .select('*')
-      .eq('event_status', 'UPCOMING')
-      .gte('event_start', nowIso)
-      .order('event_start', { ascending: true })
-      .limit(1);
+      .eq('event_status', 'ONGOING')
+      .order('event_start', { ascending: true });
 
     if (error) {
       return NextResponse.json(
@@ -34,8 +30,16 @@ export async function GET() {
       );
     }
 
+    // Add timezone info (UTC+7) to timestamps
+    const eventsWithTimezone = (data || []).map((event) => ({
+      ...event,
+      event_start: event.event_start.includes('+') || event.event_start.includes('Z') 
+        ? event.event_start 
+        : `${event.event_start}+07:00`
+    }));
+
     return NextResponse.json({
-      data: data
+      data: eventsWithTimezone
     });
 
   } catch (error) {
