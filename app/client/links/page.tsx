@@ -144,18 +144,15 @@ export default function LinksPage() {
                 key={item.id}
                 className="group flex flex-col bg-[#1a2632] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-primary/50 transition-all hover:shadow-xl dark:hover:shadow-primary/5"
               >
-                <div className="relative h-40 bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                  <div className="absolute top-4 left-4 z-10">
-                    <span className="px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded-md bg-black">
+                <div className="p-6 flex flex-col flex-1">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white leading-tight flex-1">
+                      {item.title}
+                    </h3>
+                    <span className="px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded-md bg-black whitespace-nowrap">
                       {item.group_type ?? "UNGROUPED"}
                     </span>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 opacity-80 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">
-                    {item.title}
-                  </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 break-all">
                     {item.link}
                   </p>
