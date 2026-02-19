@@ -169,9 +169,35 @@ export default function TimelinePage() {
 				<div className="mb-10">
 					<h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-4">Event Timeline</h1>
 					<p className="text-slate-400 text-lg max-w-2xl">
-						Stay updated with the latest sessions, technical deep dives, and critical submission deadlines for the SEKURO 18
-						robotic challenge.
+						ceritanya ini buat cek event2 di sekuro ya ges hehe
 					</p>
+				</div>
+
+				<div className="mt-16 bg-[#1a2632] border rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden border-white/20">
+					<div className="absolute left-0 top-0 w-2 h-full bg-white" />
+					<div className="flex-1">
+						<div className="flex items-center gap-2 mb-2 text-white">
+							<FaInfoCircle className="animate-bounce" />
+							<span className="text-xs font-black uppercase tracking-[0.2em]">Next Milestone</span>
+						</div>
+						<h4 className="text-2xl font-bold text-white mb-2">
+							{nextMilestone ? nextMilestone.event_title : "Belum ada milestone berikutnya"}
+						</h4>
+						<p className="text-slate-400">
+							{nextMilestone
+								? `Jadwal berikutnya pada ${formatEventDate(nextMilestone.event_start)} di ${nextMilestone.event_location}.`
+								: "Pantau terus jadwal untuk melihat milestone berikutnya."}
+						</p>
+					</div>
+					<div className="w-full md:w-auto flex flex-col items-center justify-center bg-background-dark p-6 rounded-xl border border-[#233648]">
+						<span className="text-xs text-slate-500 font-bold uppercase mb-1">Time Remaining</span>
+						<span className="text-3xl font-black text-white font-mono">
+							{countdown}
+						</span>
+						<div className="w-full bg-slate-800 h-1.5 rounded-full mt-4 overflow-hidden">
+							<div className="h-full bg-white" style={{ width: nextMilestone ? "45%" : "0%" }} />
+						</div>
+					</div>
 				</div>
 
 				{/* Day Selector Tabs */}
@@ -262,32 +288,6 @@ export default function TimelinePage() {
 				</div>
 
 				{/* Sticky Progress Tracker (Side Info) */}
-				<div className="mt-16 bg-[#1a2632] border rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden border-white/20">
-					<div className="absolute left-0 top-0 w-2 h-full bg-white" />
-					<div className="flex-1">
-						<div className="flex items-center gap-2 mb-2 text-white">
-							<FaInfoCircle className="animate-bounce" />
-							<span className="text-xs font-black uppercase tracking-[0.2em]">Next Milestone</span>
-						</div>
-						<h4 className="text-2xl font-bold text-white mb-2">
-							{nextMilestone ? nextMilestone.event_title : "Belum ada milestone berikutnya"}
-						</h4>
-						<p className="text-slate-400">
-							{nextMilestone
-								? `Jadwal berikutnya pada ${formatEventDate(nextMilestone.event_start)} di ${nextMilestone.event_location}.`
-								: "Pantau terus jadwal untuk melihat milestone berikutnya."}
-						</p>
-					</div>
-					<div className="w-full md:w-auto flex flex-col items-center justify-center bg-background-dark p-6 rounded-xl border border-[#233648]">
-						<span className="text-xs text-slate-500 font-bold uppercase mb-1">Time Remaining</span>
-						<span className="text-3xl font-black text-white font-mono">
-							{countdown}
-						</span>
-						<div className="w-full bg-slate-800 h-1.5 rounded-full mt-4 overflow-hidden">
-							<div className="h-full bg-white" style={{ width: nextMilestone ? "45%" : "0%" }} />
-						</div>
-					</div>
-				</div>
 			</main>
 
 			<ClientFooter />
