@@ -1,0 +1,294 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import ClientNavbar from "../components/navbar";
+import ClientFooter from "../components/footer";
+
+type TimeLeft = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+function calculateTimeLeft(target: Date): TimeLeft {
+  const now = new Date().getTime();
+  const distance = target.getTime() - now;
+
+  if (distance <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  const totalSeconds = Math.floor(distance / 1000);
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
+
+  return { days, hours, minutes, seconds };
+}
+
+function pad(value: number): string {
+  return value.toString().padStart(2, "0");
+}
+
+export default function CountdownPage() {
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    let interval: number | undefined;
+
+    async function initCountdown() {
+      try {
+        const res = await fetch("/api/upcomingEvents");
+        const json = await res.json();
+
+        const firstEvent = json?.data?.[0];
+
+        const rawDate: string | undefined = firstEvent?.event_start;
+
+        const target = rawDate ? new Date(rawDate) : new Date("2026-02-19T00:00:00+07:00");
+
+        setTimeLeft(calculateTimeLeft(target));
+
+        interval = window.setInterval(() => {
+          setTimeLeft(calculateTimeLeft(target));
+        }, 1000);
+      } catch (error) {
+        const fallback = new Date("2026-02-19T00:00:00+07:00");
+        setTimeLeft(calculateTimeLeft(fallback));
+        interval = window.setInterval(() => {
+          setTimeLeft(calculateTimeLeft(fallback));
+        }, 1000);
+      }
+    }
+
+    initCountdown();
+
+    return () => {
+      if (interval !== undefined) {
+        window.clearInterval(interval);
+      }
+    };
+  }, []);
+
+  return (
+    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen antialiased">
+      <ClientNavbar active="home" />
+
+      {/* Hero Section */}
+      <main className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundColor: "#0a0a0a",
+            backgroundImage: "radial-gradient(#333333 0.5px, transparent 0.5px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-32 sm:pb-24">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6 bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2" />
+              </span>
+              Recruitment Phase 2026
+            </div>
+
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-slate-900 dark:text-white mb-6">
+              SEKURO <span className="italic">18</span>
+            </h1>
+
+            <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-10">
+              The Gateway to
+              <span className="text-slate-900 dark:text-slate-100 font-semibold"> Unit Robotik</span>. Join the next
+              generation of engineers and innovators in our premier selection process. Build the future, one circuit at a
+              time.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/client/countdown"
+                className="w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-xl font-bold text-lg hover:bg-foreground/90 hover:shadow-2xl transition-all flex items-center justify-center gap-2 group hover:shadow-black/50 dark:hover:shadow-white/10"
+              >
+                Get Started
+                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
+              </Link>
+              <Link
+                href="/client/timeline"
+                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-border text-foreground/80 rounded-xl font-bold text-lg hover:bg-foreground/5 transition-all text-center"
+              >
+                View Timeline
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Countdown Timer Section */}
+        <section className="relative max-w-4xl mx-auto px-4 pb-24">
+          <div className="bg-card border border-border rounded-2xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 text-muted-foreground/20 pointer-events-none">
+              <span className="material-symbols-outlined text-9xl rotate-12 opacity-10">schedule</span>
+            </div>
+            <h2 className="text-xl font-bold mb-8 flex items-center gap-2">
+              <span className="material-symbols-outlined">timer</span>
+              Selection Phase 1 Begins In...
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
+              {/* Days */}
+              <div className="flex flex-col p-4 bg-secondary rounded-xl border border-border/60">
+                <span className="text-4xl sm:text-5xl font-black tabular-nums">{pad(timeLeft.days)}</span>
+                <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground mt-2">Days</span>
+              </div>
+              {/* Hours */}
+              <div className="flex flex-col p-4 bg-secondary rounded-xl border border-border/60">
+                <span className="text-4xl sm:text-5xl font-black tabular-nums">{pad(timeLeft.hours)}</span>
+                <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground mt-2">Hours</span>
+              </div>
+              {/* Minutes */}
+              <div className="flex flex-col p-4 bg-secondary rounded-xl border border-border/60">
+                <span className="text-4xl sm:text-5xl font-black tabular-nums">{pad(timeLeft.minutes)}</span>
+                <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground mt-2">Minutes</span>
+              </div>
+              {/* Seconds */}
+              <div className="flex flex-col p-4 bg-secondary rounded-xl border border-border/60">
+                <span className="text-4xl sm:text-5xl font-black text-slate-500 tabular-nums">{pad(timeLeft.seconds)}</span>
+                <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground mt-2">Seconds</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {false && (
+        <>
+          {/* Event Overview Section */}
+          <section className="bg-slate-50 dark:bg-background-dark/50 py-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div className="max-w-2xl">
+                  <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-4">Event Overview</h2>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                    Our recruitment process is designed to find the best technical talent and innovative minds. Here's what you
+                    can expect in the coming weeks.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <button className="p-2 rounded-lg border border-slate-300 dark:border-border-dark text-slate-400 hover:text-primary transition-colors">
+                    <span className="material-symbols-outlined">arrow_back</span>
+                  </button>
+                  <button className="p-2 rounded-lg border border-slate-300 dark:border-border-dark text-slate-400 hover:text-primary transition-colors">
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Step 1 */}
+                <div className="group bg-white dark:bg-card-dark p-8 rounded-2xl border border-slate-200 dark:border-border-dark hover:border-primary/50 transition-all shadow-sm hover:shadow-xl">
+                  <div className="size-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white">
+                    <span className="material-symbols-outlined text-3xl">search</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">01. Discovery</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Explore our various robotics units, from AI and Computer Vision to Mechanical Design and Electronics. Find
+                    where your passion lies.
+                  </p>
+                  <hr className="my-6 border-slate-100 dark:border-border-dark" />
+                  <div className="flex items-center gap-2 font-bold text-sm cursor-pointer group-hover:gap-3 transition-all">
+                    Learn More <span className="material-symbols-outlined text-sm">trending_flat</span>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="group bg-white dark:bg-card-dark p-8 rounded-2xl border border-slate-200 dark:border-border-dark hover:border-primary/50 transition-all shadow-sm hover:shadow-xl">
+                  <div className="size-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white">
+                    <span className="material-symbols-outlined text-3xl">memory</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">02. Validation</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Undergo technical assessments, problem-solving challenges, and hands-on engineering tests designed to push
+                    your skills to the limit.
+                  </p>
+                  <hr className="my-6 border-slate-100 dark:border-border-dark" />
+                  <div className="flex items-center gap-2 font-bold text-sm cursor-pointer group-hover:gap-3 transition-all">
+                    Test Guidelines <span className="material-symbols-outlined text-sm">trending_flat</span>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="group bg-white dark:bg-card-dark p-8 rounded-2xl border border-slate-200 dark:border-border-dark hover:border-primary/50 transition-all shadow-sm hover:shadow-xl">
+                  <div className="size-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white">
+                    <span className="material-symbols-outlined text-3xl">groups</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">03. Integration</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Final panel interviews and cultural fit assessments. Successful candidates will be officially onboarded
+                    into the elite SEKURO team.
+                  </p>
+                  <hr className="my-6 border-slate-100 dark:border-border-dark" />
+                  <div className="flex items-center gap-2 font-bold text-sm cursor-pointer group-hover:gap-3 transition-all">
+                    Onboarding Details <span className="material-symbols-outlined text-sm">trending_flat</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Call to Action / Materials Preview */}
+          <section className="py-24 overflow-hidden relative">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="rounded-[2.5rem] p-8 sm:p-16 lg:p-20 relative overflow-hidden flex flex-col lg:flex-row items-center gap-12 bg-gradient-to-br from-black via-slate-900 to-slate-800">
+                {/* Abstract Design Elements */}
+                <div className="absolute -bottom-24 -right-24 size-96 bg-white/10 rounded-full blur-3xl" />
+                <div className="absolute -top-24 -left-24 size-64 bg-black/20 rounded-full blur-2xl" />
+
+                <div className="relative z-10 lg:w-3/5 text-center lg:text-left">
+                  <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
+                    Ready to start your engineering journey?
+                  </h2>
+                  <p className="text-white/80 text-lg mb-10 max-w-xl">
+                    Download the selection handbook and study materials to prepare for Phase 1. Everything you need to succeed
+                    is right here.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                    <button className="bg-white text-primary px-8 py-4 rounded-xl font-black text-lg shadow-xl hover:bg-slate-50 transition-colors flex items-center gap-2">
+                      <span className="material-symbols-outlined">download</span>
+                      Study Handbook
+                    </button>
+                    <button className="bg-primary/20 text-white border border-white/30 px-8 py-4 rounded-xl font-black text-lg backdrop-blur-sm hover:bg-white/10 transition-colors">
+                      Technical Specs
+                    </button>
+                  </div>
+                </div>
+
+                <div className="relative z-10 lg:w-2/5 flex justify-center">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-black/40 blur-2xl group-hover:blur-3xl transition-all scale-90" />
+                    <img
+                      alt="Engineering workspace"
+                      className="rounded-3xl shadow-2xl relative w-full max-w-xs rotate-3 group-hover:rotate-0 transition-transform duration-500"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcfEoG-65oomfySgilWXwY5ISy5Ny5pyfTkxjaf_mwgLGJkPiwj_EA1odwTL-yOnflH4kmPuqoboiPxQikbUHf3SWznl3hW4hCspEcPyZShmK0FF1UE4mN8BTZ9oTTZvlWCdxrCd4zteAa6-wLJcrEPn9Q453FC8VwwTp3inxHM5PhCZw-Noxa5jgTC4TeFURdsanLFhlNihGyNKSfVnsQqyZOUGbGQ1JN7rnO1cXP8BuRGd3psfIHLY9C5QhDfqwpOLd_v9HGkg"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      <ClientFooter />
+    </div>
+  );
+}

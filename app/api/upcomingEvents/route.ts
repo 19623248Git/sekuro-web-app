@@ -17,10 +17,15 @@ export async function GET() {
       }
     );
 
+    const nowIso = new Date().toISOString();
+
     const { data, error } = await supabase
       .from('sekuro_event')
       .select('*')
-      .eq('event_status', 'UPCOMING');
+      .eq('event_status', 'UPCOMING')
+      .gte('event_start', nowIso)
+      .order('event_start', { ascending: true })
+      .limit(1);
 
     if (error) {
       return NextResponse.json(
