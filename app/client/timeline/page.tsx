@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { FaRegCalendarAlt, FaClock, FaMapMarkerAlt, FaInfoCircle } from "react-icons/fa";
 import ClientNavbar from "../components/navbar";
 import ClientFooter from "../components/footer";
 
@@ -125,18 +126,31 @@ export default function TimelinePage() {
 		fetchEvents();
 	}, []);
 
-	const upcomingEvent = events
-		.filter((event) =>
-			["UPCOMING", "COMING_SOON", "ONGOING"].includes(event.event_status),
-		)
-		.sort(
-			(a, b) =>
-				new Date(a.event_start).getTime() - new Date(b.event_start).getTime(),
-		)[0];
+	// Find the next event in the future (closest upcoming)
+	const now = Date.now();
+	const nextMilestone = events
+		.filter((event) => new Date(event.event_start).getTime() > now)
+		.sort((a, b) => new Date(a.event_start).getTime() - new Date(b.event_start).getTime())[0];
 
-	const upcomingTimeRemaining = upcomingEvent
-		? getTimeRemaining(upcomingEvent.event_start)
-		: null;
+	// Countdown state for next milestone
+	const [countdown, setCountdown] = useState<string>("--:--:--");
+	const countdownInterval = useRef<NodeJS.Timeout | null>(null);
+
+	useEffect(() => {
+		if (!nextMilestone) {
+			setCountdown("--:--:--");
+			return;
+		}
+		function updateCountdown() {
+			setCountdown(getTimeRemaining(nextMilestone.event_start));
+		}
+		updateCountdown();
+		if (countdownInterval.current) clearInterval(countdownInterval.current);
+		countdownInterval.current = setInterval(updateCountdown, 1000);
+		return () => {
+			if (countdownInterval.current) clearInterval(countdownInterval.current);
+		};
+	}, [nextMilestone?.event_start]);
 
 	return (
 		<div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
@@ -148,7 +162,7 @@ export default function TimelinePage() {
 					<h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-4">Event Timeline</h1>
 					<p className="text-slate-400 text-lg max-w-2xl">
 						Stay updated with the latest sessions, technical deep dives, and critical submission deadlines for the SEKURO 18
-						cybersecurity challenge.
+						robotic challenge.
 					</p>
 				</div>
 
@@ -202,7 +216,7 @@ export default function TimelinePage() {
 											<div key={event.id} className="flex gap-6 group">
 												<div className="flex flex-col items-center mt-1">
 													<div className="w-10 h-10 rounded-full bg-white border-4 border-background-dark flex items-center justify-center text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-														<span className="material-symbols-outlined text-lg font-bold">event</span>
+														<FaRegCalendarAlt className="text-lg font-bold" />
 													</div>
 												</div>
 												<div className="flex-1">
@@ -214,12 +228,12 @@ export default function TimelinePage() {
 																</h3>
 																<div className={`flex items-center gap-3 text-sm ${today ? "text-slate-600" : "text-slate-400"}`}>
 																	<span className="flex items-center gap-1.5">
-																		<span className="material-symbols-outlined text-sm">schedule</span>
-																		{formatEventDate(event.event_start)}
+																		   <FaClock className="text-sm" />
+																		   {formatEventDate(event.event_start)}
 																	</span>
 																	<span className="flex items-center gap-1.5">
-																		<span className="material-symbols-outlined text-sm">location_on</span>
-																		{event.event_location}
+																		   <FaMapMarkerAlt className="text-sm" />
+																		   {event.event_location}
 																	</span>
 																</div>
 															</div>
@@ -244,25 +258,25 @@ export default function TimelinePage() {
 					<div className="absolute left-0 top-0 w-2 h-full bg-white" />
 					<div className="flex-1">
 						<div className="flex items-center gap-2 mb-2 text-white">
-							<span className="material-symbols-outlined animate-bounce">info</span>
+							<FaInfoCircle className="animate-bounce" />
 							<span className="text-xs font-black uppercase tracking-[0.2em]">Next Milestone</span>
 						</div>
 						<h4 className="text-2xl font-bold text-white mb-2">
-							{upcomingEvent ? upcomingEvent.event_title : "Belum ada milestone berikutnya"}
+							{nextMilestone ? nextMilestone.event_title : "Belum ada milestone berikutnya"}
 						</h4>
 						<p className="text-slate-400">
-							{upcomingEvent
-								? `Jadwal berikutnya pada ${formatEventDate(upcomingEvent.event_start)} di ${upcomingEvent.event_location}.`
+							{nextMilestone
+								? `Jadwal berikutnya pada ${formatEventDate(nextMilestone.event_start)} di ${nextMilestone.event_location}.`
 								: "Pantau terus jadwal untuk melihat milestone berikutnya."}
 						</p>
 					</div>
 					<div className="w-full md:w-auto flex flex-col items-center justify-center bg-background-dark p-6 rounded-xl border border-[#233648]">
 						<span className="text-xs text-slate-500 font-bold uppercase mb-1">Time Remaining</span>
 						<span className="text-3xl font-black text-white font-mono">
-							{upcomingTimeRemaining ?? "--:--:--"}
+							{countdown}
 						</span>
 						<div className="w-full bg-slate-800 h-1.5 rounded-full mt-4 overflow-hidden">
-							<div className="h-full bg-white" style={{ width: "45%" }} />
+							<div className="h-full bg-white" style={{ width: nextMilestone ? "45%" : "0%" }} />
 						</div>
 					</div>
 				</div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
+import { FaSearch, FaFilter, FaExternalLinkAlt } from "react-icons/fa";
 import ClientNavbar from "../components/navbar";
 import ClientFooter from "../components/footer";
 
@@ -12,12 +13,29 @@ type LinkItem = {
   group_type: string | null;
 };
 
+
+const ALL_GROUPS = ["SOCIAL", "MATERIAL", "TEST", "FORM", "MISC", "DEV"];
+
 export default function LinksPage() {
   const [links, setLinks] = useState<LinkItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [activeGroup, setActiveGroup] = useState<string>("ALL");
+  const [showFilter, setShowFilter] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
+
+  // Close filter dropdown when clicking outside
+  useEffect(() => {
+    if (!showFilter) return;
+    function handleClick(e: MouseEvent) {
+      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+        setShowFilter(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showFilter]);
 
   useEffect(() => {
     async function fetchLinks() {
@@ -78,7 +96,7 @@ export default function LinksPage() {
         <div className="mb-12">
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">Learning Materials</h1>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
-            Access all lecture notes, slides, and video recordings from the SEKURO 18 Cyber Security program. Updated daily.
+            Access all modules and video recordings from the SEKURO 18 roboticics workshop.
           </p>
         </div>
 
@@ -86,7 +104,7 @@ export default function LinksPage() {
         <div className="flex flex-col md:flex-row gap-4 mb-10 items-center justify-between">
           <div className="relative w-full md:max-w-md">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
-              <span className="material-symbols-outlined text-sm">search</span>
+              <FaSearch className="text-sm" />
             </span>
             <input
               className="block w-full pl-10 pr-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-[#1a2632] focus:ring-2 focus:ring-primary focus:border-transparent text-sm placeholder:text-slate-500"
@@ -97,7 +115,7 @@ export default function LinksPage() {
             />
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <div className="flex bg-[#1a2632] p-1 rounded-lg border border-slate-200 dark:border-slate-800">
+            {/* <div className="flex bg-[#1a2632] p-1 rounded-lg border border-slate-200 dark:border-slate-800">
               <button
                 className={`px-4 py-1.5 text-xs font-semibold rounded-md ${
                   activeGroup === "ALL"
@@ -121,11 +139,54 @@ export default function LinksPage() {
                   {group.toLowerCase()}
                 </button>
               ))}
+            </div> */}
+            <div className="relative" ref={filterRef}>
+              <button
+                className="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-[#1a2632] text-sm font-medium text-slate-700 dark:text-slate-300"
+                onClick={() => setShowFilter((v) => !v)}
+              >
+                <FaFilter className="text-sm" />
+                Filter
+              </button>
+              {showFilter && (
+                <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg z-20 animate-fade-in">
+                  <ul className="py-2">
+                    <li key="ALL">
+                      <button
+                        className={`w-full text-left px-4 py-2 text-sm capitalize hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+                          activeGroup === "ALL"
+                            ? "font-bold text-primary"
+                            : "text-slate-700 dark:text-slate-200"
+                        }`}
+                        onClick={() => {
+                          setActiveGroup("ALL");
+                          setShowFilter(false);
+                        }}
+                      >
+                        All
+                      </button>
+                    </li>
+                    {ALL_GROUPS.map((group) => (
+                      <li key={group}>
+                        <button
+                          className={`w-full text-left px-4 py-2 text-sm capitalize hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
+                            activeGroup === group
+                              ? "font-bold text-primary"
+                              : "text-slate-700 dark:text-slate-200"
+                          }`}
+                          onClick={() => {
+                            setActiveGroup(group);
+                            setShowFilter(false);
+                          }}
+                        >
+                          {group.toLowerCase()}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg  bg-[#1a2632] text-sm font-medium text-slate-700 dark:text-slate-300">
-              <span className="material-symbols-outlined text-sm">filter_list</span>
-              Filter
-            </button>
           </div>
         </div>
 
@@ -170,7 +231,7 @@ export default function LinksPage() {
                       rel="noreferrer"
                       className="flex items-center justify-center gap-2 w-full py-2 bg-black hover:bg-slate-800 text-white rounded-lg text-sm font-semibold transition-colors dark:bg-white dark:text-black dark:hover:bg-slate-200"
                     >
-                      <span className="material-symbols-outlined text-sm">open_in_new</span>
+                      <FaExternalLinkAlt className="text-sm" />
                       Open Material
                     </a>
                   </div>
@@ -180,8 +241,8 @@ export default function LinksPage() {
           </div>
         )}
 
-        <ClientFooter />
       </main>
+      <ClientFooter />
     </div>
-  );
+  )
 }
