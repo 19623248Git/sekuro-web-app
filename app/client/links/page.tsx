@@ -167,7 +167,7 @@ export default function LinksPage() {
                       className="flex items-center justify-center gap-2 w-full py-2 bg-black hover:bg-slate-800 text-white rounded-lg text-sm font-semibold transition-colors dark:bg-white dark:text-black dark:hover:bg-slate-200"
                     >
                       <FaExternalLinkAlt className="text-sm" />
-                      Open Material
+                      Open Link
                     </a>
                   </div>
                 </div>
