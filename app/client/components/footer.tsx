@@ -15,12 +15,12 @@ export function ClientFooter() {
 					/>
 					<span className="text-white font-bold">SEKURO 18</span>
 				</div>
-				<div className="flex flex-wrap gap-8 justify-center md:justify-end text-slate-400 text-sm">
+				{/* <div className="flex flex-wrap gap-8 justify-center md:justify-end text-slate-400 text-sm">
 					<span className="hover:text-white transition-colors cursor-default">Support</span>
 					<span className="hover:text-white transition-colors cursor-default">Documentation</span>
 					<span className="hover:text-white transition-colors cursor-default">Rules</span>
 					<span className="hover:text-white transition-colors cursor-default">Privacy Policy</span>
-				</div>
+				</div> */}
 				<p className="text-slate-500 text-sm text-center md:text-right">
 					© 2026 SEKURO 18 Unit Robotika ITB. All rights reserved.
 				</p>

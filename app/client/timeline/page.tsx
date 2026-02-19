@@ -126,31 +126,39 @@ export default function TimelinePage() {
 		fetchEvents();
 	}, []);
 
-	// Find the next event in the future (closest upcoming)
-	const now = Date.now();
-	const nextMilestone = events
-		.filter((event) => new Date(event.event_start).getTime() > now)
-		.sort((a, b) => new Date(a.event_start).getTime() - new Date(b.event_start).getTime())[0];
+	   // State for nextMilestone and countdown, so all time logic runs only on client
+	   const [nextMilestone, setNextMilestone] = useState<Event | null>(null);
+	   const [countdown, setCountdown] = useState<string>("--:--:--");
+	   const countdownInterval = useRef<NodeJS.Timeout | null>(null);
 
-	// Countdown state for next milestone
-	const [countdown, setCountdown] = useState<string>("--:--:--");
-	const countdownInterval = useRef<NodeJS.Timeout | null>(null);
+	   useEffect(() => {
+		   // Only run on client
+		   const now = Date.now();
+		   const upcoming = events
+			   .filter((event) => new Date(event.event_start).getTime() > now)
+			   .sort((a, b) => new Date(a.event_start).getTime() - new Date(b.event_start).getTime())[0];
+		   setNextMilestone(upcoming || null);
+	   }, [events]);
 
-	useEffect(() => {
-		if (!nextMilestone) {
-			setCountdown("--:--:--");
-			return;
-		}
-		function updateCountdown() {
-			setCountdown(getTimeRemaining(nextMilestone.event_start));
-		}
-		updateCountdown();
-		if (countdownInterval.current) clearInterval(countdownInterval.current);
-		countdownInterval.current = setInterval(updateCountdown, 1000);
-		return () => {
-			if (countdownInterval.current) clearInterval(countdownInterval.current);
-		};
-	}, [nextMilestone?.event_start]);
+	   useEffect(() => {
+		   if (!nextMilestone) {
+			   setCountdown("--:--:--");
+			   return;
+		   }
+		   function updateCountdown() {
+			   if (nextMilestone) {
+				   setCountdown(getTimeRemaining(nextMilestone.event_start));
+			   } else {
+				   setCountdown("--:--:--");
+			   }
+		   }
+		   updateCountdown();
+		   if (countdownInterval.current) clearInterval(countdownInterval.current);
+		   countdownInterval.current = setInterval(updateCountdown, 1000);
+		   return () => {
+			   if (countdownInterval.current) clearInterval(countdownInterval.current);
+		   };
+	   }, [nextMilestone?.event_start]);
 
 	return (
 		<div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
