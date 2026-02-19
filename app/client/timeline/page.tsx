@@ -97,6 +97,7 @@ export default function TimelinePage() {
 	const [events, setEvents] = useState<Event[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [showAll, setShowAll] = useState(false);
 
 	useEffect(() => {
 		async function fetchEvents() {
@@ -233,7 +234,7 @@ export default function TimelinePage() {
 							<p className="text-slate-400 text-sm">Belum ada event yang terdaftar.</p>
 						)}
 						{!loading && !error &&
-									events.map((event) => {
+									(showAll ? events : events.slice(0, 5)).map((event) => {
 										const today = isToday(event.event_start);
 										const past = isPastDate(event.event_start);
 
@@ -284,6 +285,25 @@ export default function TimelinePage() {
 											</div>
 										);
 									})}
+						
+						{/* Show More Button */}
+						{!loading && !error && events.length > 5 && !showAll && (
+							<div className="flex gap-6 group">
+								<div className="flex flex-col items-center mt-1">
+									<div className="w-10 h-10 rounded-full bg-slate-800 border-4 border-background-dark flex items-center justify-center text-slate-400">
+										<span className="text-xs font-bold">...</span>
+									</div>
+								</div>
+								<div className="flex-1">
+									<button
+										onClick={() => setShowAll(true)}
+										className="w-full bg-[#1a2632] border border-[#233648] rounded-xl p-6 hover:border-white/30 transition-all duration-300 text-left group-hover:bg-[#1f2f3f]"
+									>
+										<span className="text-white font-bold text-lg">Show More Events</span>
+									</button>
+								</div>
+							</div>
+						)}
 					</div>
 				</div>
 
