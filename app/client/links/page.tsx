@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
-import { FaSearch, FaFilter, FaExternalLinkAlt } from "react-icons/fa";
+import { useEffect, useMemo, useState } from "react";
+import { FaSearch, FaExternalLinkAlt } from "react-icons/fa";
 import ClientNavbar from "../components/navbar";
 import ClientFooter from "../components/footer";
 
@@ -14,7 +14,7 @@ type LinkItem = {
 };
 
 
-const ALL_GROUPS = ["SOCIAL", "MATERIAL", "TEST", "FORM", "MISC", "DEV"];
+const FILTER_GROUPS = ["SOCIAL", "MATERIAL", "TEST", "FORM", "MISC"];
 
 export default function LinksPage() {
   const [links, setLinks] = useState<LinkItem[]>([]);
@@ -22,20 +22,6 @@ export default function LinksPage() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [activeGroup, setActiveGroup] = useState<string>("ALL");
-  const [showFilter, setShowFilter] = useState(false);
-  const filterRef = useRef<HTMLDivElement>(null);
-
-  // Close filter dropdown when clicking outside
-  useEffect(() => {
-    if (!showFilter) return;
-    function handleClick(e: MouseEvent) {
-      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
-        setShowFilter(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [showFilter]);
 
   useEffect(() => {
     async function fetchLinks() {
@@ -59,11 +45,6 @@ export default function LinksPage() {
 
     fetchLinks();
   }, []);
-
-  const groupTypes = useMemo(
-    () => Array.from(new Set(links.map((l) => l.group_type).filter(Boolean))) as string[],
-    [links],
-  );
 
   const filteredLinks = useMemo(
     () =>
@@ -94,14 +75,15 @@ export default function LinksPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Hero Section */}
         <div className="mb-12">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">Learning Materials</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">Link Storage</h1>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
-            Access all modules and video recordings from the SEKURO 18 roboticics workshop.
+            All links related to sekuro 18
           </p>
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="flex flex-col md:flex-row gap-4 mb-10 items-center justify-between">
+        <div className="flex flex-col gap-6 mb-10">
+          {/* Search Bar */}
           <div className="relative w-full md:max-w-md">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
               <FaSearch className="text-sm" />
@@ -114,79 +96,32 @@ export default function LinksPage() {
               type="text"
             />
           </div>
-          <div className="flex items-center gap-2 w-full md:w-auto">
-            {/* <div className="flex bg-[#1a2632] p-1 rounded-lg border border-slate-200 dark:border-slate-800">
+
+          {/* Radio-style Filter Buttons */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                activeGroup === "ALL"
+                  ? "bg-white text-black shadow-md"
+                  : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+              }`}
+              onClick={() => setActiveGroup("ALL")}
+            >
+              All
+            </button>
+            {FILTER_GROUPS.map((group) => (
               <button
-                className={`px-4 py-1.5 text-xs font-semibold rounded-md ${
-                  activeGroup === "ALL"
-                    ? "bg-black dark:bg-white text-white dark:text-black shadow-sm"
-                    : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                key={group}
+                className={`px-4 py-2 text-sm font-semibold rounded-lg capitalize transition-all ${
+                  activeGroup === group
+                    ? "bg-white text-black shadow-md"
+                    : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
                 }`}
-                onClick={() => setActiveGroup("ALL")}
+                onClick={() => setActiveGroup(group)}
               >
-                All
+                {group.toLowerCase()}
               </button>
-              {groupTypes.map((group) => (
-                <button
-                  key={group}
-                  className={`px-4 py-1.5 text-xs font-semibold rounded-md capitalize ${
-                    activeGroup === group
-                      ? "bg-black dark:bg-white text-white dark:text-black shadow-sm"
-                      : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-                  }`}
-                  onClick={() => setActiveGroup(group)}
-                >
-                  {group.toLowerCase()}
-                </button>
-              ))}
-            </div> */}
-            <div className="relative" ref={filterRef}>
-              <button
-                className="flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-[#1a2632] text-sm font-medium text-slate-700 dark:text-slate-300"
-                onClick={() => setShowFilter((v) => !v)}
-              >
-                <FaFilter className="text-sm" />
-                Filter
-              </button>
-              {showFilter && (
-                <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg z-20 animate-fade-in">
-                  <ul className="py-2">
-                    <li key="ALL">
-                      <button
-                        className={`w-full text-left px-4 py-2 text-sm capitalize hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
-                          activeGroup === "ALL"
-                            ? "font-bold text-primary"
-                            : "text-slate-700 dark:text-slate-200"
-                        }`}
-                        onClick={() => {
-                          setActiveGroup("ALL");
-                          setShowFilter(false);
-                        }}
-                      >
-                        All
-                      </button>
-                    </li>
-                    {ALL_GROUPS.map((group) => (
-                      <li key={group}>
-                        <button
-                          className={`w-full text-left px-4 py-2 text-sm capitalize hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors ${
-                            activeGroup === group
-                              ? "font-bold text-primary"
-                              : "text-slate-700 dark:text-slate-200"
-                          }`}
-                          onClick={() => {
-                            setActiveGroup(group);
-                            setShowFilter(false);
-                          }}
-                        >
-                          {group.toLowerCase()}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
+            ))}
           </div>
         </div>
 
@@ -199,7 +134,7 @@ export default function LinksPage() {
         )}
         {!loading && !error && filteredLinks.length === 0 && (
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Belum ada materials yang terdaftar.
+            Link not found
           </p>
         )}
         {!loading && !error && filteredLinks.length > 0 && (

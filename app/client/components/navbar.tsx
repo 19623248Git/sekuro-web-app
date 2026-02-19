@@ -51,7 +51,7 @@ export function ClientNavbar({ active }: NavbarProps) {
 								: "text-slate-400 hover:text-white text-sm font-medium transition-colors"
 						}
 					>
-						Materials
+						Links
 					</Link>
 				</nav>
 			</div>
