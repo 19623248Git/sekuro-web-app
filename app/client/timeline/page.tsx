@@ -102,7 +102,7 @@ export default function TimelinePage() {
 		async function fetchEvents() {
 			try {
 				setLoading(true);
-				const res = await fetch("/admin/api/event/list-event");
+				const res = await fetch("/api/eventList");
 				const json = await res.json();
 
 				if (!res.ok) {
