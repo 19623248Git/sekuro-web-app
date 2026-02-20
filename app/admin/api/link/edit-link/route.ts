@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { deleteCache } from '@/lib/redis/client';
 
 export async function PUT(request: Request) {
   try {
@@ -39,6 +40,12 @@ export async function PUT(request: Request) {
         { status: 400 }
       );
     }
+
+    // Invalidate all link caches
+    await Promise.all([
+      deleteCache('link:list'),
+      deleteCache('client:link:list')
+    ]);
 
     return NextResponse.json({
       message: 'Link updated successfully',

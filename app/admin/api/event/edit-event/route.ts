@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { deleteCache } from '@/lib/redis/client';
 
 export async function PUT(request: Request) {
   try {
@@ -39,6 +40,14 @@ export async function PUT(request: Request) {
         { status: 400 }
       );
     }
+
+    // Invalidate all event caches
+    await Promise.all([
+      deleteCache('event:list'),
+      deleteCache('client:event:list'),
+      deleteCache('client:event:ongoing'),
+      deleteCache('client:event:upcoming')
+    ]);
 
     return NextResponse.json({
       message: 'Event updated successfully',

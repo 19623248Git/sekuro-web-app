@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { deleteCache } from '@/lib/redis/client';
 
 export async function DELETE(request: Request) {
   try {
@@ -38,6 +39,12 @@ export async function DELETE(request: Request) {
         { status: 400 }
       );
     }
+
+    // Invalidate all link caches
+    await Promise.all([
+      deleteCache('link:list'),
+      deleteCache('client:link:list')
+    ]);
 
     return NextResponse.json({
       message: 'Link deleted successfully'
