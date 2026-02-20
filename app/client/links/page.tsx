@@ -69,27 +69,27 @@ export default function LinksPage() {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a1a2f] via-[#1a2632] to-[#050b10] text-white">
       <ClientNavbar active="materials" />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative overflow-hidden">
         {/* Hero Section */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">Link Storage</h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
+        <div className="mb-12 relative z-10">
+          <h1 className="text-4xl font-extrabold tracking-tight text-white mb-4 drop-shadow-[0_2px_20px_#21d4fd55]">Link Storage</h1>
+          <p className="text-lg text-[#b0c4de] max-w-2xl">
             All links related to sekuro 18
           </p>
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="flex flex-col gap-6 mb-10">
+        <div className="flex flex-col gap-6 mb-10 relative z-10">
           {/* Search Bar */}
           <div className="relative w-full md:max-w-md">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-[#21d4fd]">
               <FaSearch className="text-sm" />
             </span>
             <input
-              className="block w-full pl-10 pr-3 py-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-[#1a2632] focus:ring-2 focus:ring-primary focus:border-transparent text-sm placeholder:text-slate-500"
+              className="block w-full pl-10 pr-3 py-2 border border-[#21d4fd]/30 rounded-lg bg-[#182a3a] focus:ring-2 focus:ring-[#21d4fd] focus:border-[#21d4fd] text-sm placeholder:text-[#b0c4de] text-white"
               placeholder="Search by topic, keyword, or day..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -102,8 +102,8 @@ export default function LinksPage() {
             <button
               className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
                 activeGroup === "ALL"
-                  ? "bg-white text-black shadow-md"
-                  : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                  ? "bg-[#21d4fd] text-black shadow-md"
+                  : "bg-[#233648] text-[#b0c4de] hover:bg-[#21d4fd]/10 border border-[#21d4fd]/30"
               }`}
               onClick={() => setActiveGroup("ALL")}
             >
@@ -114,8 +114,8 @@ export default function LinksPage() {
                 key={group}
                 className={`px-4 py-2 text-sm font-semibold rounded-lg capitalize transition-all ${
                   activeGroup === group
-                    ? "bg-white text-black shadow-md"
-                    : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                    ? "bg-[#21d4fd] text-black shadow-md"
+                    : "bg-[#233648] text-[#b0c4de] hover:bg-[#21d4fd]/10 border border-[#21d4fd]/30"
                 }`}
                 onClick={() => setActiveGroup(group)}
               >
@@ -127,13 +127,13 @@ export default function LinksPage() {
 
         {/* Materials Grid */}
         {loading && (
-          <p className="text-sm text-slate-500 dark:text-slate-400">Loading materials...</p>
+          <p className="text-sm text-[#b0c4de]">Loading materials...</p>
         )}
         {!loading && error && (
           <p className="text-sm text-red-400">{error}</p>
         )}
         {!loading && !error && filteredLinks.length === 0 && (
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-[#b0c4de]">
             Link not found
           </p>
         )}
@@ -142,18 +142,18 @@ export default function LinksPage() {
             {filteredLinks.map((item) => (
               <div
                 key={item.id}
-                className="group flex flex-col bg-[#1a2632] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:border-primary/50 transition-all hover:shadow-xl dark:hover:shadow-primary/5"
+                className="group flex flex-col bg-[#182a3a] border border-[#21d4fd]/20 rounded-xl overflow-hidden hover:border-[#21d4fd] hover:shadow-[0_0_30px_#21d4fd] transition-all"
               >
                 <div className="p-6 flex flex-col flex-1">
                   <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white leading-tight flex-1">
+                    <h3 className="text-xl font-bold text-white leading-tight flex-1">
                       {item.title}
                     </h3>
-                    <span className="px-2.5 py-1 text-white text-[10px] font-bold uppercase tracking-wider rounded-md bg-black whitespace-nowrap">
+                    <span className="px-2.5 py-1 text-[#21d4fd] text-[10px] font-bold uppercase tracking-wider rounded-md bg-[#233648] whitespace-nowrap">
                       {item.group_type ?? "UNGROUPED"}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 break-all">
+                  <p className="text-xs text-[#b0c4de] mb-4 break-all">
                     {item.link}
                   </p>
                   <div className="flex flex-col gap-2 mt-auto">
@@ -161,7 +161,7 @@ export default function LinksPage() {
                       href={normalizeUrl(item.link)}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-2 bg-black hover:bg-slate-800 text-white rounded-lg text-sm font-semibold transition-colors dark:bg-white dark:text-black dark:hover:bg-slate-200"
+                      className="flex items-center justify-center gap-2 w-full py-2 bg-[#21d4fd] hover:bg-[#00eaff] text-black rounded-lg text-sm font-semibold transition-colors"
                     >
                       <FaExternalLinkAlt className="text-sm" />
                       Open Link

@@ -177,56 +177,83 @@ export default function TimelinePage() {
 	   }, [nextMilestone?.event_start]);
 
 	return (
-		<div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+		<div className="min-h-screen bg-gradient-to-br from-[#0a1a2f] via-[#1a2632] to-[#050b10] text-white">
 			<ClientNavbar active="timeline" />
 
-			<main className="max-w-[1200px] mx-auto px-6 md:px-20 lg:px-40 py-10">
+			<main className="max-w-[1200px] mx-auto px-6 md:px-20 lg:px-40 py-10 relative overflow-hidden">
 				{/* Header Section */}
-				<div className="mb-10">
-					<h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-4">Event Timeline</h1>
-					<p className="text-slate-400 text-lg max-w-2xl">
-						Timeline for upcoming events in sekuro 18
+				<div className="mb-10 relative z-10">
+					<h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-4 drop-shadow-[0_2px_20px_#21d4fd55]">Event Timeline</h1>
+					<p className="text-[#b0c4de] text-lg max-w-2xl">
+						ceritanya ini buat cek event2 di sekuro ya ges hehe
 					</p>
 				</div>
 
-				{/* Ongoing Events Cards */}
-				{ongoingEvents.length > 0 && (
-					<div className="mt-8 flex flex-col gap-6">
-						{ongoingEvents.map((event) => (
-							<div key={event.id} className="bg-green-500/10 border border-green-500/30 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden">
-								<div className="absolute left-0 top-0 w-2 h-full bg-green-400" />
-								<div className="flex-1">
-									<div className="flex items-center gap-2 mb-2 text-green-400">
-										<span className="relative flex h-3 w-3">
-											<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-											<span className="relative inline-flex rounded-full h-3 w-3 bg-green-400" />
-										</span>
-										<span className="text-xs font-black uppercase tracking-[0.2em]">Ongoing Now</span>
-									</div>
-									<h4 className="text-2xl font-bold text-white mb-2">
-										{event.event_title}
-									</h4>
-									<div className="flex flex-col gap-2 text-slate-400 text-sm">
-										<div className="flex items-center gap-3">
-											<span className="flex items-center gap-1.5">
-												<FaClock className="text-sm" />
-												Started: {formatEventDate(event.event_start)}
-											</span>
-											<span className="flex items-center gap-1.5">
-												<FaMapMarkerAlt className="text-sm" />
-												{event.event_location}
-											</span>
-										</div>
-										<span className="flex items-center gap-1.5 text-green-400 font-semibold">
-											<FaClock className="text-sm" />
-											Ends: {formatEventDate(event.event_end)}
-										</span>
-									</div>
-								</div>
-							</div>
-						))}
+				<div className="mt-16 bg-[#182a3a] border border-[#21d4fd]/30 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden">
+					<div className="absolute left-0 top-0 w-2 h-full bg-[#21d4fd]" />
+					<div className="flex-1">
+						<div className="flex items-center gap-2 mb-2 text-[#21d4fd]">
+							<FaInfoCircle className="animate-bounce" />
+							<span className="text-xs font-black uppercase tracking-[0.2em]">Next Milestone</span>
+						</div>
+						<h4 className="text-2xl font-bold text-white mb-2">
+							{nextMilestone ? nextMilestone.event_title : "Belum ada milestone berikutnya"}
+						</h4>
+						<p className="text-[#b0c4de]">
+							{nextMilestone
+								? `Jadwal berikutnya pada ${formatEventDate(nextMilestone.event_start)} di ${nextMilestone.event_location}.`
+								: "Pantau terus jadwal untuk melihat milestone berikutnya."}
+						</p>
 					</div>
-				)}
+					<div className="w-full md:w-auto flex flex-col items-center justify-center bg-[#233648] p-6 rounded-xl border border-[#21d4fd]/30">
+						<span className="text-xs text-[#b0c4de] font-bold uppercase mb-1">Time Remaining</span>
+						<span className="text-3xl font-black text-[#21d4fd] font-mono drop-shadow-[0_0_10px_#21d4fd]">
+							{countdown}
+						</span>
+						<div className="w-full bg-[#1a2632] h-1.5 rounded-full mt-4 overflow-hidden">
+							<div className="h-full bg-[#21d4fd] transition-all duration-500" style={{ width: nextMilestone ? "45%" : "0%" }} />
+						</div>
+					</div>
+				</div>
+
+				{/* Ongoing Events Cards */}
+								{ongoingEvents.length > 0 && (
+									<div className="mt-8 flex flex-col gap-6">
+										{ongoingEvents.map((event) => (
+											<div key={event.id} className="bg-[#00eaff]/10 border border-[#21d4fd]/30 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden">
+												<div className="absolute left-0 top-0 w-2 h-full bg-[#21d4fd]" />
+												<div className="flex-1">
+													<div className="flex items-center gap-2 mb-2 text-[#21d4fd]">
+														<span className="relative flex h-3 w-3">
+															<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#21d4fd] opacity-75" />
+															<span className="relative inline-flex rounded-full h-3 w-3 bg-[#21d4fd]" />
+														</span>
+														<span className="text-xs font-black uppercase tracking-[0.2em]">Ongoing Now</span>
+													</div>
+													<h4 className="text-2xl font-bold text-white mb-2">
+														{event.event_title}
+													</h4>
+													<div className="flex flex-col gap-2 text-slate-400 text-sm">
+														<div className="flex items-center gap-3">
+															<span className="flex items-center gap-1.5">
+																<FaClock className="text-sm" />
+																Started: {formatEventDate(event.event_start)}
+															</span>
+															<span className="flex items-center gap-1.5">
+																<FaClock className="text-sm" />
+																Ends: {formatEventDate(event.event_end)}
+															</span>
+															<span className="flex items-center gap-1.5">
+																<FaMapMarkerAlt className="text-sm" />
+																{event.event_location}
+															</span>
+														</div>
+													</div>
+												</div>
+											</div>
+										))}
+									</div>
+								)}
 
 				<div className="mt-16 bg-[#1a2632] border rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden border-white/20">
 					<div className="absolute left-0 top-0 w-2 h-full bg-white" />
@@ -269,8 +296,8 @@ export default function TimelinePage() {
 				</div>
 
 				{/* Day Selector Tabs */}
-				<div className="flex flex-col gap-6 mb-12">
-					<div className="flex border-b border-[#233648] gap-4 md:gap-8 overflow-x-auto no-scrollbar">
+				<div className="flex flex-col gap-6 mb-12 relative z-10">
+					<div className="flex border-b border-[#21d4fd]/30 gap-4 md:gap-8 overflow-x-auto no-scrollbar">
 						{/* <button className="flex items-center gap-2 border-b-2 border-white text-white pb-4 px-2 whitespace-nowrap">
 							<span className="text-sm font-bold uppercase tracking-wider">Day 1</span>
 							<span className="text-xs text-black bg-white px-2 py-0.5 rounded-full font-semibold">Introduction</span>
@@ -289,7 +316,7 @@ export default function TimelinePage() {
 				{/* Timeline Section */}
 				<div className="relative">
 					{/* Central Line */}
-					<div className="absolute left-[19px] top-0 bottom-0 w-[2px] bg-slate-800 z-0" />
+					<div className="absolute left-[19px] top-0 bottom-0 w-[2px] bg-[#21d4fd]/20 z-0" />
 					<div className="flex flex-col gap-12 relative z-10">
 						{loading && (
 							<p className="text-slate-400 text-sm">Loading events...</p>
@@ -305,21 +332,21 @@ export default function TimelinePage() {
 										const today = isToday(event.event_start);
 										const past = isPastDate(event.event_start);
 
-										const cardBase = "rounded-xl hover:border-primary/50 transition-all duration-300 shadow-sm";
-										const sizeClasses = today ? "p-7 md:p-8" : "p-6";
-										let cardColorClasses = "bg-[#1a2632] border border-[#233648]";
-										if (today) {
-											cardColorClasses = "bg-white border border-white";
-										} else if (past) {
-											cardColorClasses = "bg-[#050b10] border border-slate-800";
-										}
+												const cardBase = "rounded-xl hover:border-[#21d4fd] hover:border-2 transition-all duration-300 shadow-sm";
+												const sizeClasses = today ? "p-7 md:p-8" : "p-6";
+												let cardColorClasses = "bg-[#182a3a] border border-[#21d4fd]/20";
+												if (today) {
+													cardColorClasses = "bg-white border border-white";
+												} else if (past) {
+													cardColorClasses = "bg-[#050b10] border border-[#233648]";
+												}
 
 										return (
 											<div key={event.id} className="flex gap-6 group">
 												<div className="flex flex-col items-center mt-1">
-													<div className="w-10 h-10 rounded-full bg-white border-4 border-background-dark flex items-center justify-center text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-														<FaRegCalendarAlt className="text-lg font-bold" />
-													</div>
+																										<div className="w-10 h-10 rounded-full bg-[#21d4fd] border-4 border-[#182a3a] flex items-center justify-center text-black shadow-[0_0_15px_#21d4fd55]">
+																											<FaRegCalendarAlt className="text-lg font-bold" />
+																										</div>
 												</div>
 												<div className="flex-1">
 													<div className={`${cardBase} ${cardColorClasses} ${sizeClasses}`}>
@@ -346,9 +373,9 @@ export default function TimelinePage() {
 																</div>
 															</div>
 															<span
-																className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-tighter ${getStatusClasses(
-																		event.event_status,
-																	)}`}
+																																className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-tighter ${getStatusClasses(
+																																				event.event_status,
+																																			)} border-[#21d4fd]/30`}
 															>
 																{getStatusLabel(event.event_status)}
 															</span>

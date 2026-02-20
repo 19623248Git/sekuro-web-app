@@ -119,37 +119,29 @@ export default function CountdownPage() {
   }, []);
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen antialiased">
+    <div className="min-h-screen antialiased bg-gradient-to-br from-[#0a1a2f] via-[#1a2632] to-[#050b10] text-white">
       <ClientNavbar active="home" />
 
       {/* Hero Section */}
       <main className="relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-20 pointer-events-none"
-          style={{
-            backgroundColor: "#0a0a0a",
-            backgroundImage: "radial-gradient(#333333 0.5px, transparent 0.5px)",
-            backgroundSize: "24px 24px",
-          }}
-        />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-32 sm:pb-24">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6 bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#21d4fd]/10 border border-[#21d4fd]/20 text-[#21d4fd] text-xs font-bold uppercase tracking-widest mb-6">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#21d4fd] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#21d4fd]" />
               </span>
               Recruitment Phase 2026
             </div>
 
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-slate-900 dark:text-white mb-6">
-              SEKURO <span className="italic">18</span>
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white mb-6 drop-shadow-[0_2px_20px_#21d4fd55]">
+              SEKURO <span className="italic text-[#21d4fd]">18</span>
             </h1>
 
-            <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-10">
+            <p className="max-w-2xl mx-auto text-lg sm:text-xl text-[#b0c4de] leading-relaxed mb-10">
               The Gateway to
-              <span className="text-slate-900 dark:text-slate-100 font-semibold"> Unit Robotik</span>. Join the next
+              <span className="text-white font-semibold"> Unit Robotik</span>. Join the next
               generation of engineers and innovators in our premier selection process. Build the future, one circuit at a
               time.
             </p>
@@ -157,14 +149,14 @@ export default function CountdownPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/client/links"
-                className="w-full sm:w-auto px-8 py-4 bg-foreground text-background rounded-xl font-bold text-lg hover:bg-foreground/90 hover:shadow-2xl transition-all flex items-center justify-center gap-2 group hover:shadow-black/50 dark:hover:shadow-white/10"
+                className="w-full sm:w-auto px-8 py-4 bg-[#21d4fd] text-black rounded-xl font-bold text-lg hover:bg-[#00eaff] hover:shadow-[0_0_30px_#21d4fd] transition-all flex items-center justify-center gap-2 group"
               >
                 Get Started
                 <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/client/timeline"
-                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-border text-foreground/80 rounded-xl font-bold text-lg hover:bg-foreground/5 transition-all text-center"
+                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-[#21d4fd] text-[#21d4fd] rounded-xl font-bold text-lg hover:bg-[#21d4fd]/10 transition-all text-center"
               >
                 View Timeline
               </Link>
@@ -177,33 +169,27 @@ export default function CountdownPage() {
           <section className="relative max-w-4xl mx-auto px-4 pb-12">
             <div className="flex flex-col gap-6">
               {ongoingEvents.map((event) => (
-                <div key={event.id} className="bg-green-500/10 border border-green-500/30 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden">
-                  <div className="absolute left-0 top-0 w-2 h-full bg-green-400" />
+                <div key={event.id} className="bg-[#00eaff]/10 border border-[#21d4fd]/30 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden">
+                  <div className="absolute left-0 top-0 w-2 h-full bg-[#21d4fd]" />
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2 text-green-400">
+                    <div className="flex items-center gap-2 mb-2 text-[#21d4fd]">
                       <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-400" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#21d4fd] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-[#21d4fd]" />
                       </span>
                       <span className="text-xs font-black uppercase tracking-[0.2em]">Ongoing Now</span>
                     </div>
                     <h4 className="text-2xl font-bold text-white mb-2">
                       {event.event_title}
                     </h4>
-                    <div className="flex flex-col gap-2 text-slate-400 text-sm">
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
-                        <span className="flex items-center gap-1.5">
-                          <FaClock className="text-sm" />
-                          Started: {formatEventDate(event.event_start)}
-                        </span>
-                        <span className="flex items-center gap-1.5">
-                          <FaMapMarkerAlt className="text-sm" />
-                          {event.event_location}
-                        </span>
-                      </div>
-                      <span className="flex items-center gap-1.5 text-green-400 font-semibold">
+                    <div className="flex items-center gap-3 text-[#b0c4de] text-sm">
+                      <span className="flex items-center gap-1.5">
                         <FaClock className="text-sm" />
-                        Ends: {formatEventDate(event.event_end)}
+                        {formatEventDate(event.event_start)}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <FaMapMarkerAlt className="text-sm" />
+                        {event.event_location}
                       </span>
                     </div>
                   </div>
@@ -215,40 +201,40 @@ export default function CountdownPage() {
 
         {/* Countdown Timer Section */}
         <section className="relative max-w-4xl mx-auto px-4 pb-24">
-          <div className="bg-card border border-border rounded-2xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 text-muted-foreground/20 pointer-events-none">
+          <div className="bg-[#182a3a] border border-[#21d4fd]/30 rounded-2xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 text-[#21d4fd]/20 pointer-events-none">
               <FaRegCalendarAlt className="text-9xl rotate-12 opacity-10" />
             </div>
-            <h2 className="text-xl font-bold mb-8 flex items-center gap-2">
+            <h2 className="text-xl font-bold mb-8 flex items-center gap-2 text-[#21d4fd]">
               <FaClock />
               {eventTitle}
             </h2>
             {eventLocation && (
-              <div className="flex items-center justify-center gap-2 mb-4 text-slate-500 dark:text-slate-400 text-sm">
+              <div className="flex items-center justify-center gap-2 mb-4 text-[#b0c4de] text-sm">
                 <span className="font-semibold">{eventDate}</span>
                 {eventLocation && <span>• {eventLocation}</span>}
               </div>
             )}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
               {/* Days */}
-              <div className="flex flex-col p-4 bg-secondary rounded-xl border border-border/60">
-                <span className="text-4xl sm:text-5xl font-black tabular-nums">{pad(timeLeft.days)}</span>
-                <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground mt-2">Days</span>
+              <div className="flex flex-col p-4 bg-[#233648] rounded-xl border border-[#21d4fd]/30">
+                <span className="text-4xl sm:text-5xl font-black tabular-nums text-[#21d4fd] drop-shadow-[0_0_10px_#21d4fd]">{pad(timeLeft.days)}</span>
+                <span className="text-xs font-medium uppercase tracking-widest text-[#b0c4de] mt-2">Days</span>
               </div>
               {/* Hours */}
-              <div className="flex flex-col p-4 bg-secondary rounded-xl border border-border/60">
-                <span className="text-4xl sm:text-5xl font-black tabular-nums">{pad(timeLeft.hours)}</span>
-                <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground mt-2">Hours</span>
+              <div className="flex flex-col p-4 bg-[#233648] rounded-xl border border-[#21d4fd]/30">
+                <span className="text-4xl sm:text-5xl font-black tabular-nums text-[#21d4fd] drop-shadow-[0_0_10px_#21d4fd]">{pad(timeLeft.hours)}</span>
+                <span className="text-xs font-medium uppercase tracking-widest text-[#b0c4de] mt-2">Hours</span>
               </div>
               {/* Minutes */}
-              <div className="flex flex-col p-4 bg-secondary rounded-xl border border-border/60">
-                <span className="text-4xl sm:text-5xl font-black tabular-nums">{pad(timeLeft.minutes)}</span>
-                <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground mt-2">Minutes</span>
+              <div className="flex flex-col p-4 bg-[#233648] rounded-xl border border-[#21d4fd]/30">
+                <span className="text-4xl sm:text-5xl font-black tabular-nums text-[#21d4fd] drop-shadow-[0_0_10px_#21d4fd]">{pad(timeLeft.minutes)}</span>
+                <span className="text-xs font-medium uppercase tracking-widest text-[#b0c4de] mt-2">Minutes</span>
               </div>
               {/* Seconds */}
-              <div className="flex flex-col p-4 bg-secondary rounded-xl border border-border/60">
-                <span className="text-4xl sm:text-5xl font-black text-slate-500 tabular-nums">{pad(timeLeft.seconds)}</span>
-                <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground mt-2">Seconds</span>
+              <div className="flex flex-col p-4 bg-[#233648] rounded-xl border border-[#21d4fd]/30">
+                <span className="text-4xl sm:text-5xl font-black tabular-nums text-[#21d4fd] drop-shadow-[0_0_10px_#21d4fd]">{pad(timeLeft.seconds)}</span>
+                <span className="text-xs font-medium uppercase tracking-widest text-[#b0c4de] mt-2">Seconds</span>
               </div>
             </div>
           </div>
@@ -347,7 +333,7 @@ export default function CountdownPage() {
                     is right here.
                   </p>
                   <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-                    <button className="bg-white text-primary px-8 py-4 rounded-xl font-black text-lg shadow-xl hover:bg-slate-50 transition-colors flex items-center gap-2">
+              tu      <button className="bg-white text-primary px-8 py-4 rounded-xl font-black text-lg shadow-xl hover:bg-slate-50 transition-colors flex items-center gap-2">
                       <FaDownload />
                       Study Handbook
                     </button>
