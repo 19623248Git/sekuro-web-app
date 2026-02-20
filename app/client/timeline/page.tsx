@@ -10,6 +10,7 @@ type Event = {
 	created_at: string;
 	event_title: string;
 	event_start: string;
+	event_end: string;
 	event_location: string;
 	event_status: "UPCOMING" | "COMING_SOON" | "ONGOING" | "OVER";
 };
@@ -184,35 +185,8 @@ export default function TimelinePage() {
 				<div className="mb-10">
 					<h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-4">Event Timeline</h1>
 					<p className="text-slate-400 text-lg max-w-2xl">
-						ceritanya ini buat cek event2 di sekuro ya ges hehe
+						Timeline for upcoming events in sekuro 18
 					</p>
-				</div>
-
-				<div className="mt-16 bg-[#1a2632] border rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden border-white/20">
-					<div className="absolute left-0 top-0 w-2 h-full bg-white" />
-					<div className="flex-1">
-						<div className="flex items-center gap-2 mb-2 text-white">
-							<FaInfoCircle className="animate-bounce" />
-							<span className="text-xs font-black uppercase tracking-[0.2em]">Next Milestone</span>
-						</div>
-						<h4 className="text-2xl font-bold text-white mb-2">
-							{nextMilestone ? nextMilestone.event_title : "Belum ada milestone berikutnya"}
-						</h4>
-						<p className="text-slate-400">
-							{nextMilestone
-								? `Jadwal berikutnya pada ${formatEventDate(nextMilestone.event_start)} di ${nextMilestone.event_location}.`
-								: "Pantau terus jadwal untuk melihat milestone berikutnya."}
-						</p>
-					</div>
-					<div className="w-full md:w-auto flex flex-col items-center justify-center bg-background-dark p-6 rounded-xl border border-[#233648]">
-						<span className="text-xs text-slate-500 font-bold uppercase mb-1">Time Remaining</span>
-						<span className="text-3xl font-black text-white font-mono">
-							{countdown}
-						</span>
-						<div className="w-full bg-slate-800 h-1.5 rounded-full mt-4 overflow-hidden">
-							<div className="h-full bg-white" style={{ width: nextMilestone ? "45%" : "0%" }} />
-						</div>
-					</div>
 				</div>
 
 				{/* Ongoing Events Cards */}
@@ -232,14 +206,20 @@ export default function TimelinePage() {
 									<h4 className="text-2xl font-bold text-white mb-2">
 										{event.event_title}
 									</h4>
-									<div className="flex items-center gap-3 text-slate-400 text-sm">
-										<span className="flex items-center gap-1.5">
+									<div className="flex flex-col gap-2 text-slate-400 text-sm">
+										<div className="flex items-center gap-3">
+											<span className="flex items-center gap-1.5">
+												<FaClock className="text-sm" />
+												Started: {formatEventDate(event.event_start)}
+											</span>
+											<span className="flex items-center gap-1.5">
+												<FaMapMarkerAlt className="text-sm" />
+												{event.event_location}
+											</span>
+										</div>
+										<span className="flex items-center gap-1.5 text-green-400 font-semibold">
 											<FaClock className="text-sm" />
-											{formatEventDate(event.event_start)}
-										</span>
-										<span className="flex items-center gap-1.5">
-											<FaMapMarkerAlt className="text-sm" />
-											{event.event_location}
+											Ends: {formatEventDate(event.event_end)}
 										</span>
 									</div>
 								</div>
@@ -247,6 +227,46 @@ export default function TimelinePage() {
 						))}
 					</div>
 				)}
+
+				<div className="mt-16 bg-[#1a2632] border rounded-2xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl relative overflow-hidden border-white/20">
+					<div className="absolute left-0 top-0 w-2 h-full bg-white" />
+					<div className="flex-1">
+						<div className="flex items-center gap-2 mb-2 text-white">
+							<FaInfoCircle className="animate-bounce" />
+							<span className="text-xs font-black uppercase tracking-[0.2em]">Next Milestone</span>
+						</div>
+						<h4 className="text-2xl font-bold text-white mb-2">
+							{nextMilestone ? nextMilestone.event_title : "Belum ada milestone berikutnya"}
+						</h4>
+						{nextMilestone ? (
+							<div className="flex flex-col gap-1 text-slate-400 text-sm">
+								<span className="flex items-center gap-1.5">
+									<FaClock className="text-sm" />
+									Starts: {formatEventDate(nextMilestone.event_start)}
+								</span>
+								<span className="flex items-center gap-1.5">
+									<FaClock className="text-sm" />
+									Ends: {formatEventDate(nextMilestone.event_end)}
+								</span>
+								<span className="flex items-center gap-1.5">
+									<FaMapMarkerAlt className="text-sm" />
+									{nextMilestone.event_location}
+								</span>
+							</div>
+						) : (
+							<p className="text-slate-400 text-sm">Pantau terus jadwal untuk melihat milestone berikutnya.</p>
+						)}
+					</div>
+					<div className="w-full md:w-auto flex flex-col items-center justify-center bg-background-dark p-6 rounded-xl border border-[#233648]">
+						<span className="text-xs text-slate-500 font-bold uppercase mb-1">Time Remaining</span>
+						<span className="text-3xl font-black text-white font-mono">
+							{countdown}
+						</span>
+						<div className="w-full bg-slate-800 h-1.5 rounded-full mt-4 overflow-hidden">
+							<div className="h-full bg-white" style={{ width: nextMilestone ? "45%" : "0%" }} />
+						</div>
+					</div>
+				</div>
 
 				{/* Day Selector Tabs */}
 				<div className="flex flex-col gap-6 mb-12">
@@ -308,14 +328,20 @@ export default function TimelinePage() {
 																<h3 className={`text-xl font-bold mb-1 ${today ? "text-slate-900" : "text-white"}`}>
 																	{event.event_title}
 																</h3>
-																<div className={`flex items-center gap-3 text-sm ${today ? "text-slate-600" : "text-slate-400"}`}>
+																<div className={`flex flex-col gap-1 text-sm ${today ? "text-slate-600" : "text-slate-400"}`}>
+																	<div className="flex items-center gap-3">
+																		<span className="flex items-center gap-1.5">
+																			   <FaClock className="text-sm" />
+																			   Start: {formatEventDate(event.event_start)}
+																		</span>
+																		<span className="flex items-center gap-1.5">
+																			   <FaMapMarkerAlt className="text-sm" />
+																			   {event.event_location}
+																		</span>
+																	</div>
 																	<span className="flex items-center gap-1.5">
-																		   <FaClock className="text-sm" />
-																		   {formatEventDate(event.event_start)}
-																	</span>
-																	<span className="flex items-center gap-1.5">
-																		   <FaMapMarkerAlt className="text-sm" />
-																		   {event.event_location}
+																		<FaClock className="text-sm" />
+																		End: {formatEventDate(event.event_end)}
 																	</span>
 																</div>
 															</div>

@@ -190,10 +190,20 @@ export default function CountdownPage() {
                     <h4 className="text-2xl font-bold text-white mb-2">
                       {event.event_title}
                     </h4>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-slate-400 text-sm">
-                      <span className="flex items-center gap-1.5">
-                        <FaMapMarkerAlt className="text-sm" />
-                        {event.event_location}
+                    <div className="flex flex-col gap-2 text-slate-400 text-sm">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                        <span className="flex items-center gap-1.5">
+                          <FaClock className="text-sm" />
+                          Started: {formatEventDate(event.event_start)}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <FaMapMarkerAlt className="text-sm" />
+                          {event.event_location}
+                        </span>
+                      </div>
+                      <span className="flex items-center gap-1.5 text-green-400 font-semibold">
+                        <FaClock className="text-sm" />
+                        Ends: {formatEventDate(event.event_end)}
                       </span>
                     </div>
                   </div>
