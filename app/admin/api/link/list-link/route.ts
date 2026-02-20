@@ -1,8 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { getCache, setCache } from '@/lib/redis/client';
+
+const CACHE_KEY = 'link:list';
+const CACHE_TTL = 30 * 60; // 30 minutes in seconds
 
 export async function GET() {
   try {
+
+    // Check cache first
+    const cachedData = await getCache(CACHE_KEY);
+    if (cachedData) {
+      return NextResponse.json({ data: cachedData });
+    }
+
+    // Do database operation if cache miss
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -27,6 +39,9 @@ export async function GET() {
         { status: 400 }
       );
     }
+
+    // Cache the result
+    await setCache(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json({
       data: data
