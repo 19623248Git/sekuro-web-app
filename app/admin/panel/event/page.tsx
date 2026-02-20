@@ -37,6 +37,7 @@ type Event = {
   created_at: string;
   event_title: string;
   event_start: string;
+  event_end: string;
   event_location: string;
   event_status: 'UPCOMING' | 'COMING_SOON' | 'ONGOING' | 'OVER';
 };
@@ -46,6 +47,7 @@ const EVENT_STATUS_OPTIONS = ['UPCOMING', 'COMING_SOON', 'ONGOING', 'OVER'] as c
 type EventFormData = {
   event_title: string;
   event_start: string;
+  event_end: string;
   event_location: string;
   event_status: 'UPCOMING' | 'COMING_SOON' | 'ONGOING' | 'OVER';
 };
@@ -56,6 +58,7 @@ export default function EventManagementPanel() {
   const [formData, setFormData] = useState<EventFormData>({
     event_title: '',
     event_start: '',
+    event_end: '',
     event_location: '',
     event_status: 'UPCOMING'
   });
@@ -119,6 +122,7 @@ export default function EventManagementPanel() {
         setFormData({
           event_title: '',
           event_start: '',
+          event_end: '',
           event_location: '',
           event_status: 'UPCOMING'
         });
@@ -161,6 +165,7 @@ export default function EventManagementPanel() {
         setFormData({
           event_title: '',
           event_start: '',
+          event_end: '',
           event_location: '',
           event_status: 'UPCOMING'
         });
@@ -207,6 +212,7 @@ export default function EventManagementPanel() {
     setFormData({
       event_title: event.event_title,
       event_start: event.event_start,
+      event_end: event.event_end,
       event_location: event.event_location,
       event_status: event.event_status
     });
@@ -219,6 +225,7 @@ export default function EventManagementPanel() {
     setFormData({
       event_title: '',
       event_start: '',
+      event_end: '',
       event_location: '',
       event_status: 'UPCOMING'
     });
@@ -282,6 +289,18 @@ export default function EventManagementPanel() {
                   name="event_start"
                   type="datetime-local"
                   value={formData.event_start}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="event_end">Event End Date</Label>
+                <Input
+                  id="event_end"
+                  name="event_end"
+                  type="datetime-local"
+                  value={formData.event_end}
                   onChange={handleInputChange}
                   required
                 />
@@ -372,6 +391,7 @@ export default function EventManagementPanel() {
                 <TableRow>
                   <TableHead className="text-center"><strong>Event Title</strong></TableHead>
                   <TableHead className="text-center"><strong>Start Date</strong></TableHead>
+                  <TableHead className="text-center"><strong>End Date</strong></TableHead>
                   <TableHead className="text-center"><strong>Location</strong></TableHead>
                   <TableHead className="text-center"><strong>Status</strong></TableHead>
                   <TableHead className="text-center"><strong>Actions</strong></TableHead>
@@ -382,6 +402,7 @@ export default function EventManagementPanel() {
                   <TableRow key={event.id}>
                     <TableCell className="font-medium text-center">{event.event_title}</TableCell>
                     <TableCell className="text-center">{new Date(event.event_start).toLocaleString()}</TableCell>
+                    <TableCell className="text-center">{new Date(event.event_end).toLocaleString()}</TableCell>
                     <TableCell className="text-center">{event.event_location}</TableCell>
                     <TableCell className="text-center">
                       <Badge 
