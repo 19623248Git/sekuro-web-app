@@ -42,7 +42,7 @@ export async function DELETE(request: Request) {
 
     // Invalidate all link caches
     await Promise.all([
-      deleteCache('link:list'),
+      deleteCache('admin:link:list'),
       deleteCache('client:link:list')
     ]);
 

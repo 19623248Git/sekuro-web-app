@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getCache, setCache } from '@/lib/redis/client';
 
 const CACHE_KEY = 'client:event:list';
-const CACHE_TTL = 30 * 60; // 30 minutes in seconds
+const CACHE_TTL = 24 * 60 * 60; // 24 hours in seconds
 
 export async function GET() {
   try {

@@ -42,7 +42,7 @@ export async function DELETE(request: Request) {
 
     // Invalidate all event caches
     await Promise.all([
-      deleteCache('event:list'),
+      deleteCache('admin:event:list'),
       deleteCache('client:event:list'),
       deleteCache('client:event:ongoing'),
       deleteCache('client:event:upcoming')
