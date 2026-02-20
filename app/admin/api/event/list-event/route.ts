@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { getCache, setCache } from '@/lib/redis/client';
 
-const CACHE_KEY = 'event:list';
+const CACHE_KEY = 'admin:event:list';
 const CACHE_TTL = 30 * 60; // 30 minutes in seconds
 
 export async function GET() {
