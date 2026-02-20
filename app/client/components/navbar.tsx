@@ -16,7 +16,7 @@ export function ClientNavbar({ active }: NavbarProps) {
 					<Link href="/client/countdown" className="flex items-center gap-3">
 						<Image
 							alt="URO Logo"
-							className="h-14 w-14 rounded-xl object-cover shadow-[0_0_20px_#21d4fd44]"
+							className="h-14 w-14 rounded-xl object-cover"
 							src={uroLogo}
 						/>
 						<h2 className="text-white text-xl font-bold leading-tight tracking-tight drop-shadow-[0_2px_20px_#21d4fd55]">SEKURO 18</h2>

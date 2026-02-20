@@ -33,6 +33,14 @@ export function ClientFooter() {
 						>
 							Instagram
 						</a>
+						<a
+							href="https://line.me/ti/p/christian.a.s."
+							target="_blank"
+							rel="noopener noreferrer"
+							className="hover:text-white transition-colors"
+						>
+							LINE (Chris)
+						</a>
 					</div>
 					<div className="flex-1 min-w-[180px] text-slate-500 text-sm flex items-center justify-center md:justify-end">
 						<p>
