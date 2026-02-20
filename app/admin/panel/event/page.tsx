@@ -92,6 +92,23 @@ export default function EventManagementPanel() {
     fetchEvents();
   }, []);
 
+  // Convert datetime-local string to ISO string with timezone
+  const convertToISOWithTimezone = (datetimeLocal: string): string => {
+    // datetime-local format: "2024-12-25T14:30"
+    // We need to add seconds and timezone offset
+    const date = new Date(datetimeLocal);
+    
+    // Get timezone offset in minutes (negative for ahead of UTC, positive for behind)
+    const timezoneOffset = -date.getTimezoneOffset();
+    const hours = String(Math.floor(Math.abs(timezoneOffset) / 60)).padStart(2, '0');
+    const minutes = String(Math.abs(timezoneOffset) % 60).padStart(2, '0');
+    const sign = timezoneOffset >= 0 ? '+' : '-';
+    
+    // Format: YYYY-MM-DDTHH:mm:ss+HH:mm
+    const isoString = `${datetimeLocal}:00${sign}${hours}:${minutes}`;
+    return isoString;
+  };
+
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -107,12 +124,19 @@ export default function EventManagementPanel() {
     setSubmitting(true);
 
     try {
+      // Convert datetime-local values to ISO strings with timezone
+      const eventData = {
+        ...formData,
+        event_start: convertToISOWithTimezone(formData.event_start),
+        event_end: convertToISOWithTimezone(formData.event_end)
+      };
+
       const response = await fetch('/admin/api/event/add-event', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(eventData),
       });
 
       const result = await response.json();
@@ -147,6 +171,13 @@ export default function EventManagementPanel() {
     setSubmitting(true);
 
     try {
+      // Convert datetime-local values to ISO strings with timezone
+      const eventData = {
+        ...formData,
+        event_start: convertToISOWithTimezone(formData.event_start),
+        event_end: convertToISOWithTimezone(formData.event_end)
+      };
+
       const response = await fetch('/admin/api/event/edit-event', {
         method: 'PUT',
         headers: {
@@ -154,7 +185,7 @@ export default function EventManagementPanel() {
         },
         body: JSON.stringify({
           id: editingId,
-          ...formData
+          ...eventData
         }),
       });
 
