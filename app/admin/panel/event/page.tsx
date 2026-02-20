@@ -209,10 +209,22 @@ export default function EventManagementPanel() {
   // Load event data into form for editing
   const handleStartEdit = (event: Event) => {
     setEditingId(event.id);
+    
+    // Format dates for datetime-local input (YYYY-MM-DDThh:mm)
+    const formatDateForInput = (dateString: string) => {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+    
     setFormData({
       event_title: event.event_title,
-      event_start: event.event_start,
-      event_end: event.event_end,
+      event_start: formatDateForInput(event.event_start),
+      event_end: formatDateForInput(event.event_end),
       event_location: event.event_location,
       event_status: event.event_status
     });
