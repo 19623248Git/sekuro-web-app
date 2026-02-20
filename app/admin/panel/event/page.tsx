@@ -94,8 +94,7 @@ export default function EventManagementPanel() {
 
   // Convert datetime-local string to ISO string with timezone
   const convertToISOWithTimezone = (datetimeLocal: string): string => {
-    // datetime-local format: "2024-12-25T14:30"
-    // We need to add seconds and timezone offset
+    // datetime-local format: "2024-12-25T14:30:00" or "2024-12-25T14:30"
     const date = new Date(datetimeLocal);
     
     // Get timezone offset in minutes (negative for ahead of UTC, positive for behind)
@@ -104,8 +103,11 @@ export default function EventManagementPanel() {
     const minutes = String(Math.abs(timezoneOffset) % 60).padStart(2, '0');
     const sign = timezoneOffset >= 0 ? '+' : '-';
     
+    // Add seconds if not present
+    const withSeconds = datetimeLocal.split(':').length === 3 ? datetimeLocal : `${datetimeLocal}:00`;
+    
     // Format: YYYY-MM-DDTHH:mm:ss+HH:mm
-    const isoString = `${datetimeLocal}:00${sign}${hours}:${minutes}`;
+    const isoString = `${withSeconds}${sign}${hours}:${minutes}`;
     return isoString;
   };
 
@@ -241,7 +243,7 @@ export default function EventManagementPanel() {
   const handleStartEdit = (event: Event) => {
     setEditingId(event.id);
     
-    // Format dates for datetime-local input (YYYY-MM-DDThh:mm)
+    // Format dates for datetime-local input (YYYY-MM-DDThh:mm:ss)
     const formatDateForInput = (dateString: string) => {
       const date = new Date(dateString);
       const year = date.getFullYear();
@@ -249,7 +251,8 @@ export default function EventManagementPanel() {
       const day = String(date.getDate()).padStart(2, '0');
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
     };
     
     setFormData({
@@ -331,6 +334,7 @@ export default function EventManagementPanel() {
                   id="event_start"
                   name="event_start"
                   type="datetime-local"
+                  step="1"
                   value={formData.event_start}
                   onChange={handleInputChange}
                   required
@@ -343,6 +347,7 @@ export default function EventManagementPanel() {
                   id="event_end"
                   name="event_end"
                   type="datetime-local"
+                  step="1"
                   value={formData.event_end}
                   onChange={handleInputChange}
                   required
