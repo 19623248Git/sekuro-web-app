@@ -30,16 +30,8 @@ export async function GET() {
       );
     }
 
-    // Add timezone info (UTC+7) to timestamps
-    const eventsWithTimezone = (data || []).map((event) => ({
-      ...event,
-      event_start: event.event_start.includes('+') || event.event_start.includes('Z') 
-        ? event.event_start 
-        : `${event.event_start}+07:00`
-    }));
-
     return NextResponse.json({
-      data: eventsWithTimezone
+      data: data
     });
 
   } catch (error) {

@@ -29,16 +29,9 @@ export async function GET() {
       );
     }
 
-    // Add timezone info (UTC+7) to timestamps and filter future events
+    // Filter future events
     const now = Date.now();
-    const eventsWithTimezone = (data || []).map((event) => ({
-      ...event,
-      event_start: event.event_start.includes('+') || event.event_start.includes('Z') 
-        ? event.event_start 
-        : `${event.event_start}+07:00`
-    }));
-
-    const futureEvents = eventsWithTimezone.filter((event) => {
+    const futureEvents = (data || []).filter((event) => {
       const eventTime = new Date(event.event_start).getTime();
       return eventTime > now;
     });
