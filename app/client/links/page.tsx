@@ -11,6 +11,7 @@ type LinkItem = {
   title: string;
   link: string;
   group_type: string | null;
+  valid: string;
 };
 
 
@@ -139,37 +140,54 @@ export default function LinksPage() {
         )}
         {!loading && !error && filteredLinks.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredLinks.map((item) => (
-              <div
-                key={item.id}
-                className="group flex flex-col bg-[#182a3a] border border-[#21d4fd]/20 rounded-xl overflow-hidden hover:border-[#21d4fd] hover:shadow-[0_0_30px_#21d4fd] transition-all"
-              >
-                <div className="p-6 flex flex-col flex-1">
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="text-xl font-bold text-white leading-tight flex-1">
-                      {item.title}
-                    </h3>
-                    <span className="px-2.5 py-1 text-[#21d4fd] text-[10px] font-bold uppercase tracking-wider rounded-md bg-[#233648] whitespace-nowrap">
-                      {item.group_type ?? "UNGROUPED"}
-                    </span>
-                  </div>
-                  <p className="text-xs text-[#b0c4de] mb-4 break-all">
-                    {item.link}
-                  </p>
-                  <div className="flex flex-col gap-2 mt-auto">
-                    <a
-                      href={normalizeUrl(item.link)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-2 bg-[#21d4fd] hover:bg-[#00eaff] text-black rounded-lg text-sm font-semibold transition-colors"
-                    >
-                      <FaExternalLinkAlt className="text-sm" />
-                      Open Link
-                    </a>
+            {filteredLinks.map((item) => {
+              const isOpen = item.valid === "OPEN";
+              return (
+                <div
+                  key={item.id}
+                  className={`group flex flex-col bg-[#182a3a] border border-[#21d4fd]/20 rounded-xl overflow-hidden transition-all ${
+                    isOpen 
+                      ? "hover:border-[#21d4fd] hover:shadow-[0_0_30px_#21d4fd]" 
+                      : "opacity-50 cursor-not-allowed"
+                  }`}
+                >
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h3 className={`text-xl font-bold leading-tight flex-1 ${
+                        isOpen ? "text-white" : "text-gray-400"
+                      }`}>
+                        {item.title}
+                      </h3>
+                      <span className="px-2.5 py-1 text-[#21d4fd] text-[10px] font-bold uppercase tracking-wider rounded-md bg-[#233648] whitespace-nowrap">
+                        {item.group_type ?? "UNGROUPED"}
+                      </span>
+                    </div>
+                    <p className={`text-xs mb-4 break-all ${
+                      isOpen ? "text-[#b0c4de]" : "text-gray-500"
+                    }`}>
+                      {item.link}
+                    </p>
+                    <div className="flex flex-col gap-2 mt-auto">
+                      {isOpen ? (
+                        <a
+                          href={normalizeUrl(item.link)}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center justify-center gap-2 w-full py-2 bg-[#21d4fd] hover:bg-[#00eaff] text-black rounded-lg text-sm font-semibold transition-colors"
+                        >
+                          <FaExternalLinkAlt className="text-sm" />
+                          Open Link
+                        </a>
+                      ) : (
+                        <div className="flex items-center justify-center w-full py-2 bg-gray-600 text-gray-300 rounded-lg text-sm font-semibold cursor-not-allowed">
+                          Link is not available
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
