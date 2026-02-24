@@ -162,11 +162,11 @@ export default function LinksPage() {
                         {item.group_type ?? "UNGROUPED"}
                       </span>
                     </div>
-                    <p className={`text-xs mb-4 break-all ${
-                      isOpen ? "text-[#b0c4de]" : "text-gray-500"
-                    }`}>
-                      {item.link}
-                    </p>
+                    {isOpen && (
+                      <p className="text-xs text-[#b0c4de] mb-4 break-all">
+                        {item.link}
+                      </p>
+                    )}
                     <div className="flex flex-col gap-2 mt-auto">
                       {isOpen ? (
                         <a
