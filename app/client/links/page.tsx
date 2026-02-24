@@ -78,7 +78,7 @@ export default function LinksPage() {
         <div className="mb-12 relative z-10">
           <h1 className="text-4xl font-extrabold tracking-tight text-white mb-4 drop-shadow-[0_2px_20px_#21d4fd55]">Link Storage</h1>
           <p className="text-lg text-[#b0c4de] max-w-2xl">
-            All links related to sekuro 18
+            Semua link yang bisa diakses untuk keperluan SEKURO 18
           </p>
         </div>
 

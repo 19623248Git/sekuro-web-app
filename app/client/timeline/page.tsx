@@ -185,7 +185,7 @@ export default function TimelinePage() {
 				<div className="mb-10 relative z-10">
 					<h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-4 drop-shadow-[0_2px_20px_#21d4fd55]">Event Timeline</h1>
 					<p className="text-[#b0c4de] text-lg max-w-2xl">
-						Timeline for all sekuro related event
+						Timeline kegiatan SEKURO 18
 					</p>
 				</div>
 

@@ -141,9 +141,7 @@ export default function CountdownPage() {
 
             <p className="max-w-2xl mx-auto text-lg sm:text-xl text-[#b0c4de] leading-relaxed mb-10">
               The Gateway to
-              <span className="text-white font-semibold"> Unit Robotik</span>. Join the next
-              generation of engineers and innovators in our premier selection process. Build the future, one circuit at a
-              time.
+<span className="text-white font-semibold"> Sekolah Unit Robotika</span>. Dimana kalian akan belajar banyak hal mengenai robotika dan bidang-bidang yang ada di dalamnya
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
