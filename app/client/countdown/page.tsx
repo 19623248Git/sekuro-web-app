@@ -185,7 +185,11 @@ export default function CountdownPage() {
                     <div className="flex items-center gap-3 text-[#b0c4de] text-sm">
                       <span className="flex items-center gap-1.5">
                         <FaClock className="text-sm" />
-                        {formatEventDate(event.event_start)}
+                        Started: {formatEventDate(event.event_start)}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <FaClock className="text-sm" />
+                        Ends: {formatEventDate(event.event_end)}
                       </span>
                       <span className="flex items-center gap-1.5">
                         <FaMapMarkerAlt className="text-sm" />
