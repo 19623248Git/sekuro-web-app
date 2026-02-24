@@ -239,7 +239,7 @@ export default function TimelinePage() {
 							{nextMilestone ? nextMilestone.event_title : "Belum ada milestone berikutnya"}
 						</h4>
 						{nextMilestone ? (
-							<div className="flex flex-col gap-1 text-slate-400 text-sm text-[#b0c4de]">
+							<div className="flex flex-col gap-1 text-sm text-[#b0c4de]">
 								<span className="flex items-center gap-1.5">
 									<FaClock className="text-sm" />
 									Starts: {formatEventDate(nextMilestone.event_start)}
@@ -301,64 +301,63 @@ export default function TimelinePage() {
 							<p className="text-slate-400 text-sm">Belum ada event yang terdaftar.</p>
 						)}
 						{!loading && !error &&
-									(showAll ? events : events.slice(0, 5)).map((event) => {
-										const today = isToday(event.event_start);
-										const past = isPastDate(event.event_start);
+						(showAll ? events : events.slice(0, 5)).map((event) => {
+						const today = isToday(event.event_start);
+						const past = isPastDate(event.event_start);
 
-												const cardBase = "rounded-xl hover:border-[#21d4fd] hover:border-2 transition-all duration-300 shadow-sm";
-												const sizeClasses = today ? "p-7 md:p-8" : "p-6";
-												let cardColorClasses = "bg-[#182a3a] border border-[#21d4fd]/20";
-												if (today) {
-													cardColorClasses = "bg-white border border-white";
-												} else if (past) {
-													cardColorClasses = "bg-[#050b10] border border-[#233648]";
-												}
+								// Make border width consistent to prevent shifting
+								const cardBase = "rounded-xl border-2 hover:border-[#21d4fd] transition-all duration-300 shadow-sm";
+								const sizeClasses = today ? "p-7 md:p-8" : "p-6";
+								let cardColorClasses = "bg-[#182a3a] border-[#21d4fd]/20";
+								if (today) {
+									cardColorClasses = "bg-white border-white";
+								} else if (past) {
+									cardColorClasses = "bg-[#050b10] border-[#233648]";
+								}
 
-										return (
-											<div key={event.id} className="flex gap-6 group">
-												<div className="flex flex-col items-center mt-1">
-																										<div className="w-10 h-10 rounded-full bg-[#21d4fd] border-4 border-[#182a3a] flex items-center justify-center text-black shadow-[0_0_15px_#21d4fd55]">
-																											<FaRegCalendarAlt className="text-lg font-bold" />
-																										</div>
-												</div>
-												<div className="flex-1">
-													<div className={`${cardBase} ${cardColorClasses} ${sizeClasses}`}>
-														<div className="flex flex-wrap justify-between items-start gap-4 mb-3">
-															<div>
-																<h3 className={`text-xl font-bold mb-1 ${today ? "text-slate-900" : "text-white"}`}>
-																	{event.event_title}
-																</h3>
-																<div className={`flex flex-col gap-1 text-sm ${today ? "text-slate-600" : "text-slate-400"}`}>
-																	<div className="flex items-center gap-3">
-																		<span className="flex items-center gap-1.5">
-																			   <FaClock className="text-sm" />
-																			   Start: {formatEventDate(event.event_start)}
-																		</span>
-																		<span className="flex items-center gap-1.5">
-																			   <FaMapMarkerAlt className="text-sm" />
-																			   {event.event_location}
-																		</span>
-																	</div>
-																	<span className="flex items-center gap-1.5">
-																		<FaClock className="text-sm" />
-																		End: {formatEventDate(event.event_end)}
-																	</span>
-																</div>
-															</div>
-															<span
-																																className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-tighter ${getStatusClasses(
-																																				event.event_status,
-																																			)} border-[#21d4fd]/30`}
-															>
-																{getStatusLabel(event.event_status)}
-															</span>
-														</div>
+						return (
+							<div key={event.id} className="flex gap-6 group">
+								<div className="flex flex-col items-center mt-1">
+								<div className="w-10 h-10 rounded-full bg-[#21d4fd] border-4 border-[#182a3a] flex items-center justify-center text-black shadow-[0_0_15px_#21d4fd55]">
+									<FaRegCalendarAlt className="text-lg font-bold" />
+								</div>
+								</div>
+								<div className="flex-1">
+									<div className={`${cardBase} ${cardColorClasses} ${sizeClasses}`}>
+										<div className="flex flex-wrap justify-between items-start gap-4 mb-3">
+											<div>
+												<h3 className={`text-xl font-bold mb-1 ${today ? "text-slate-900" : "text-white"}`}>
+													{event.event_title}
+												</h3>
+												<div className={`flex flex-col gap-1 text-sm ${today ? "text-slate-600" : "text-slate-400"}`}>
+													<div className="flex items-center gap-3">
+														<span className="flex items-center gap-1.5">
+																<FaClock className="text-sm" />
+																Start: {formatEventDate(event.event_start)}
+														</span>
+														<span className="flex items-center gap-1.5">
+																<FaMapMarkerAlt className="text-sm" />
+																{event.event_location}
+														</span>
 													</div>
+													<span className="flex items-center gap-1.5">
+														<FaClock className="text-sm" />
+														End: {formatEventDate(event.event_end)}
+													</span>
 												</div>
 											</div>
-										);
-									})}
-						
+											<span
+											className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-tighter ${getStatusClasses(event.event_status,)} border-[#21d4fd]/30`}
+											>
+												{getStatusLabel(event.event_status)}
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						);
+					})}
+		
 						{/* Show More Button */}
 						{!loading && !error && events.length > 5 && !showAll && (
 							<div className="flex gap-6 group">
@@ -379,8 +378,6 @@ export default function TimelinePage() {
 						)}
 					</div>
 				</div>
-
-				{/* Sticky Progress Tracker (Side Info) */}
 			</main>
 
 			<ClientFooter />
